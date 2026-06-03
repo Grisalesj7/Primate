@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Zentrum Inmobiliaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-red: #e61e2b;
+            --hover-red: #b3121b;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(20, 20, 20, 0.75);
+            --border-dark: #262626;
+            --text-muted: #aaaaaa;
+            --card-shadow: 0 8px 32px rgba(230, 30, 43, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            color: #ffffff;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), 
+                        url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-dark);
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .logo span {
+            color: var(--primary-red);
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-red);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: #111111;
+            border: 1px solid var(--border-dark);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+        }
+
+        .terms-condition {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .terms-condition input {
+            accent-color: var(--primary-red);
+            margin-top: 3px;
+        }
+
+        .terms-condition a {
+            color: var(--primary-red);
+            font-weight: 500;
+        }
+
+        .terms-condition a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.3s, transform 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--hover-red);
+            transform: translateY(-2px);
+        }
+
+        .auth-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary-red);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="logo">Zentrum<span> Inmobiliaria</span></div>
+            <p>Crea una cuenta y descubre el poder de encontrar tu hogar</p>
+        </div>
+
+        <form action="login.html" method="POST">
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" class="form-control" placeholder="Tu nombre y apellido" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" class="form-control" placeholder="ejemplo@primate.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" class="form-control" placeholder="Mínimo 8 caracteres" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar Contraseña</label>
+                <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <input type="password" class="form-control" placeholder="Repite tu contraseña" required>
+                </div>
+            </div>
+
+            <label class="terms-condition">
+                <input type="checkbox" required>
+                <span>Acepto los <a href="#">Términos de Servicio</a> y las <a href="#">Políticas de Privacidad</a> de Primate Inmobiliaria.</span>
+            </label>
+
+            <button type="submit" class="btn-submit">Crear Cuenta</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>¿Ya tienes una cuenta? <a href="login.html">Inicia Sesión</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

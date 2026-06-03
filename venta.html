@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inmuebles en Venta - Primate</title>
+    <title>Zentrum - Inmuebles en Venta</title>
     <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -109,6 +109,97 @@
             font-size: 0.85rem;
             color: var(--text-light);
             font-weight: 500;
+        }
+
+        /* --- CONTENEDOR ANIMADO DEL FORMULARIO OCULTO --- */
+        .form-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
+            opacity: 0;
+        }
+
+        .form-wrapper.visible {
+            max-height: 2000px; /* Suficiente espacio para expandirse */
+            opacity: 1;
+            padding-top: 30px;
+        }
+
+        /* --- FORMULARIO DE AGREGAR PROPIEDAD --- */
+        .form-section {
+            background: var(--main-black);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .form-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid var(--primary-red);
+            padding-left: 10px;
+        }
+
+        .property-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary-red);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        .btn-submit {
+            grid-column: 1 / -1;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--dark-red);
         }
 
         /* --- 2. BARRA DE FILTROS (SUB-HEADER) --- */
@@ -324,7 +415,7 @@
             font-size: 0.75rem;
         }
 
-        /* Zona Derecha: Información */
+        /* Zona Derecho: Información */
         .card-content {
             flex: 1;
             padding: 0;
@@ -351,7 +442,6 @@
             flex-direction: column;
         }
 
-        /* Logo Estilizado de Primate dentro de la tarjeta */
         .brand-logo-box {
             position: absolute;
             top: 20px;
@@ -451,7 +541,6 @@
             background-color: transparent;
             border: 1px solid var(--primary-red);
             color: var(--primary-red);
-            background: transparent;
         }
 
         .btn-call:hover {
@@ -483,7 +572,7 @@
     <!-- 1. NAVBAR GENERAL -->
     <header>
         <div class="container navbar">
-            <div class="logo">Primate<span>.</span></div>
+            <div class="logo">Zentrum<span>.</span></div>
             <ul class="nav-menu">
                 <li><a href="proyectoviviendas.html">Proyectos de vivienda</a></li>
                 <li><a href="venta.html">Venta</a></li>
@@ -492,7 +581,7 @@
                 <li><a href="dashboard.html">Dashboard</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn-publish">Publica tu propiedad</button>
+                <button class="btn-publish" id="toggleFormBtn">Publica tu propiedad</button>
                 <div class="user-profile">
                     <i class="fa-regular fa-user"></i>
                     <span>johao grisales</span>
@@ -515,14 +604,68 @@
         </div>
     </div>
 
+    <!-- SECCIÓN DEL FORMULARIO DINÁMICO (AHORA EN CAJA COLAPSABLE EXTRAÍDA DEL MAIN PARA MEJOR FLUJO) -->
+    <div class="container form-wrapper" id="formWrapper">
+        <div class="form-section">
+            <h2>Publicar nuevo inmueble en Primate</h2>
+            <form id="addPropertyForm" class="property-form">
+                <div class="form-group">
+                    <label>Categoría de Marca</label>
+                    <select id="formBranding" required>
+                        <option value="PRIMATE EXCLUSIVE">PRIMATE EXCLUSIVE</option>
+                        <option value="PRIMATE PREMIUM">PRIMATE PREMIUM</option>
+                        <option value="PRIMATE STANDARD">PRIMATE STANDARD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Precio (Ej: $ 450.000.000)</label>
+                    <input type="text" id="formPrice" placeholder="Desde $ 2.000.000" required>
+                </div>
+                <div class="form-group">
+                    <label>Ubicación (Ej: Apartamento en Medellín)</label>
+                    <input type="text" id="formLocation" placeholder="Apartamento en..." required>
+                </div>
+                <div class="form-group">
+                    <label>URL de la Imagen</label>
+                    <input type="url" id="formImageUrl" placeholder="https://images.unsplash.com/..." required>
+                </div>
+                <div class="form-group">
+                    <label>Habitaciones</label>
+                    <input type="number" id="formBeds" placeholder="Ej: 3" required>
+                </div>
+                <div class="form-group">
+                    <label>Baños</label>
+                    <input type="number" id="formBaths" placeholder="Ej: 2" required>
+                </div>
+                <div class="form-group">
+                    <label>Área (m²)</label>
+                    <input type="text" id="formArea" placeholder="Ej: 85.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Etiqueta Especial</label>
+                    <select id="formTag">
+                        <option value="DESTACADO">DESTACADO</option>
+                        <option value="NUEVO">NUEVO</option>
+                        <option value="OPORTUNIDAD">OPORTUNIDAD</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label>Descripción detallada</label>
+                    <textarea id="formDescription" placeholder="Describe las ventajas y características principales del inmueble..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Generar Tarjeta de Inmueble</button>
+            </form>
+        </div>
+    </div>
+
     <!-- 3. CONTENIDO PRINCIPAL -->
     <main class="container main-content">
         
         <div class="results-header">
             <div class="title-section">
                 <div class="breadcrumb">Estás en: Primate > Venta</div>
-                <h1>Inmuebles en Venta en Venezuela</h1>
-                <div class="results-count">Mostrando <strong>1-21</strong> de más de <strong>400</strong> resultados</div>
+                <h1>Inmuebles en Venta</h1>
+                <div class="results-count">Mostrando <strong id="currentCount">1-2</strong> de más de <strong id="totalCount">400</strong> resultados</div>
             </div>
             <div class="view-actions">
                 <button class="btn-view"><i class="fa-solid fa-arrow-down-short-wide"></i> Popularidad</button>
@@ -531,98 +674,156 @@
         </div>
 
         <!-- LISTA DE INMUEBLES -->
-        <div class="properties-list">
-
-            <!-- TARJETA 1 -->
-            <div class="property-card">
-                <!-- Imagen en carrusel -->
-                <div class="card-image-wrapper" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80');">
-                    <div class="badges-container">
-                        <span class="badge-status featured"><i class="fa-solid fa-star"></i> DESTACADO</span>
-                        <span class="badge-status"><i class="fa-solid fa-building"></i></span>
-                    </div>
-                    <div class="image-nav">
-                        <span class="nav-arrow"><i class="fa-solid fa-chevron-left"></i></span>
-                        <span class="nav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-                    </div>
-                    <div class="image-counter">1 / 6</div>
-                </div>
-
-                <!-- Bloque Informativo -->
-                <div class="card-content">
-                    <div class="branding-header">PRIMATE EXCLUSIVE</div>
-                    <div class="card-body-details">
-                        
-                        <!-- Mini Logo Estilizado de Primate -->
-                        <div class="brand-logo-box">
-                            <span>PRIMA<em>T</em>E</span>
-                        </div>
-                        
-                        <div class="property-price">Desde $ 2.773.321.000</div>
-                        <div class="property-subtitle">Apartamento en Tucacas, Venezuela</div>
-                        
-                        <div class="property-specs">
-                            <span><i class="fa-solid fa-bed"></i> 5 Habs.</span>
-                            <span><i class="fa-solid fa-bath"></i> 6 Baños</span>
-                            <span><i class="fa-solid fa-maximize"></i> 297.47 m²</span>
-                        </div>
-
-                        <div class="property-description-title">
-                            Reserva De finca, ubicada en el sector de Tucacas, estado Falcón, Venezuela. La propiedad cuenta con una extensión de 1.000 hectáreas, con acceso a la playa y vistas panorámicas al mar Caribe. Ideal para desarrollo turístico o residencial exclusivo.
-                        </div>
-
-                        <div class="contact-actions">
-                            <button class="btn-action btn-contact"><i class="fa-regular fa-envelope"></i> Contactar</button>
-                            <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TARJETA 2 -->
-            <div class="property-card">
-                <div class="card-image-wrapper" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80');">
-                    <div class="badges-container">
-                        <span class="badge-status featured"><i class="fa-solid fa-star"></i> DESTACADO</span>
-                        <span class="badge-status"><i class="fa-solid fa-building"></i></span>
-                    </div>
-                    <div class="image-nav">
-                        <span class="nav-arrow"><i class="fa-solid fa-chevron-left"></i></span>
-                        <span class="nav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-                    </div>
-                    <div class="image-counter">1 / 12</div>
-                </div>
-
-                <div class="card-content">
-                    <div class="branding-header">PRIMATE PREMIUM</div>
-                    <div class="card-body-details">
-                        <div class="brand-logo-box">
-                            <span>PRIMA<em>T</em>E</span>
-                        </div>
-                        
-                        <div class="property-price">$ 450.000.000</div>
-                        <div class="property-subtitle">Apartamento en Caracas, Venezuela</div>
-                        
-                        <div class="property-specs">
-                            <span><i class="fa-solid fa-bed"></i> 3 Beds.</span>
-                            <span><i class="fa-solid fa-bath"></i> 2 Baños</span>
-                            <span><i class="fa-solid fa-maximize"></i> 85.00 m²</span>
-                        </div>
-
-                        <div class="property-description-title">
-                            Edificio Sendero Azul, Sector Residencial Exclusivo
-                        </div>
-
-                        <div class="contact-actions">
-                            <button class="btn-action btn-contact"><i class="fa-regular fa-envelope"></i> Contactar</button>
-                            <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="properties-list" id="propertiesContainer">
+            <!-- Las tarjetas quemadas por defecto y las guardadas en LocalStorage se inyectarán dinámicamente aquí -->
         </div>
     </main>
 
+    <!-- LOGICA EN JAVASCRIPT -->
+    <script>
+        // --- TARJETAS BASE POR DEFECTO ---
+        const defaultProperties = [
+            {
+                branding: "PRIMATE EXCLUSIVE",
+                price: "Desde $ 2.773.321.000",
+                locationStr: "Apartamento en Tucacas, Venezuela",
+                imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80",
+                beds: "5",
+                baths: "6",
+                area: "297.47",
+                tag: "DESTACADO",
+                description: "Reserva De finca, ubicada en el sector de Tucacas, estado Falcón, Venezuela. La propiedad cuenta con una extensión de 1.000 hectáreas, con acceso a la playa y vistas panorámicas al mar Caribe. Ideal para desarrollo turístico o residencial exclusivo."
+            },
+            {
+                branding: "PRIMATE PREMIUM",
+                price: "$ 450.000.000",
+                locationStr: "Apartamento en Caracas, Venezuela",
+                imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+                beds: "3",
+                baths: "2",
+                area: "85.00",
+                tag: "DESTACADO",
+                description: "Edificio Sendero Azul, Sector Residencial Exclusivo"
+            }
+        ];
+
+        // --- MANEJO DEL FORMULARIO DESPLEGABLE ---
+        const toggleFormBtn = document.getElementById('toggleFormBtn');
+        const formWrapper = document.getElementById('formWrapper');
+
+        toggleFormBtn.addEventListener('click', () => {
+            formWrapper.classList.toggle('visible');
+            if(formWrapper.classList.contains('visible')) {
+                toggleFormBtn.innerText = "Cerrar Formulario";
+                toggleFormBtn.style.background = "#2a2a2a";
+            } else {
+                toggleFormBtn.innerText = "Publica tu propiedad";
+                toggleFormBtn.style.background = "var(--primary-red)";
+            }
+        });
+
+        // --- RENDERIZADO DE PROPIEDADES CON LOCALSTORAGE ---
+        const container = document.getElementById('propertiesContainer');
+
+        function getStoredProperties() {
+            const stored = localStorage.getItem('primate_sales');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function updateCounter() {
+            const totalCards = container.getElementsByClassName('property-card').length;
+            document.getElementById('currentCount').innerText = `1-${totalCards}`;
+        }
+
+        function createCardHTML(prop) {
+            return `
+                <div class="property-card">
+                    <div class="card-image-wrapper" style="background-image: url('${prop.imageUrl}');">
+                        <div class="badges-container">
+                            <span class="badge-status featured"><i class="fa-solid fa-star"></i> ${prop.tag}</span>
+                            <span class="badge-status"><i class="fa-solid fa-building"></i></span>
+                        </div>
+                        <div class="image-nav">
+                            <span class="nav-arrow"><i class="fa-solid fa-chevron-left"></i></span>
+                            <span class="nav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                        <div class="image-counter">1 / 1</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="branding-header">${prop.branding}</div>
+                        <div class="card-body-details">
+                            <div class="brand-logo-box">
+                                <span>PRIMA<em>T</em>E</span>
+                            </div>
+                            <div class="property-price">${prop.price}</div>
+                            <div class="property-subtitle">${prop.locationStr}</div>
+                            <div class="property-specs">
+                                <span><i class="fa-solid fa-bed"></i> ${prop.beds} Habs.</span>
+                                <span><i class="fa-solid fa-bath"></i> ${prop.baths} Baños</span>
+                                <span><i class="fa-solid fa-maximize"></i> ${prop.area} m²</span>
+                            </div>
+                            <div class="property-description-title">
+                                ${prop.description}
+                            </div>
+                            <div class="contact-actions">
+                                <button class="btn-action btn-contact"><i class="fa-regular fa-envelope"></i> Contactar</button>
+                                <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAllProperties() {
+            container.innerHTML = "";
+            const savedProps = getStoredProperties();
+            
+            // Renderizar primero los guardados por el usuario (más nuevos arriba)
+            savedProps.forEach(prop => {
+                container.insertAdjacentHTML('beforeend', createCardHTML(prop));
+            });
+
+            // Renderizar las propiedades estáticas por defecto al final
+            defaultProperties.forEach(prop => {
+                container.insertAdjacentHTML('beforeend', createCardHTML(prop));
+            });
+
+            updateCounter();
+        }
+
+        // --- ESCUCHA DEL SUBMIT DEL FORMULARIO ---
+        document.getElementById('addPropertyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Capturar datos del objeto
+            const newProperty = {
+                branding: document.getElementById('formBranding').value,
+                price: document.getElementById('formPrice').value,
+                locationStr: document.getElementById('formLocation').value,
+                imageUrl: document.getElementById('formImageUrl').value,
+                beds: document.getElementById('formBeds').value,
+                baths: document.getElementById('formBaths').value,
+                area: document.getElementById('formArea').value,
+                tag: document.getElementById('formTag').value,
+                description: document.getElementById('formDescription').value
+            };
+
+            // Guardar en la lista existente de LocalStorage
+            const currentList = getStoredProperties();
+            currentList.unshift(newProperty); // Inserta el nuevo al principio del storage
+            localStorage.setItem('primate_sales', JSON.stringify(currentList));
+
+            // Volver a renderizar la lista completa
+            renderAllProperties();
+
+            // Limpiar y ocultar formulario de nuevo
+            document.getElementById('addPropertyForm').reset();
+            toggleFormBtn.click(); 
+        });
+
+        // Carga inicial al abrir la página
+        renderAllProperties();
+    </script>
 </body>
 </html>

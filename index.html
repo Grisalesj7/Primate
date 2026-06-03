@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Primate Inmobiliaria - El poder de encontrar tu hogar</title>
+    <title>Zentrum Inmobiliaria - El poder de encontrar tu hogar</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -114,6 +114,38 @@
             gap: 20px;
         }
 
+        /* Estilos para los nuevos enlaces de autenticación en el Navbar */
+        .auth-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            color: #ffffff;
+            transition: color 0.3s;
+        }
+
+        .btn-login:hover {
+            color: var(--primary-red);
+        }
+
+        .btn-register {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .btn-register:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
         .btn-publish {
             background-color: var(--primary-red);
             color: white;
@@ -139,6 +171,8 @@
             font-size: 0.9rem;
             color: #ffffff;
             font-weight: 500;
+            border-left: 1px solid var(--border-dark);
+            padding-left: 15px;
         }
 
         .user-profile i {
@@ -519,7 +553,7 @@
 
         /* --- RESPONSIVO --- */
         @media (max-width: 768px) {
-            .nav-menu, .nav-actions .user-profile {
+            .nav-menu, .nav-actions .user-profile, .auth-nav-links {
                 display: none;
             }
             .hero h1 {
@@ -549,41 +583,48 @@
 
     <header>
         <div class="container navbar">
-            <div class="logo">Primate<span> Inmobiliaria</span></div>
+            <div class="logo">Zentrum<span> Inmobiliaria</span></div>
             <ul class="nav-menu">
-                <li class="nav-item"><a href="proyectoviviendas.html">Proyectos Primate</a></li>
+                <li class="nav-item"><a href="proyectoviviendas.html">Zentrum</a></li>
                 <li class="nav-item"><a href="venta.html">Ventas</a></li>
                 <li class="nav-item"><a href="arriendo.html">Arriendos</a></li>
                 <li class="nav-item"><a href="dashboard.html">Dashboard</a></li>
-                <li class="nav-item"><a href="home.html">Noticias Primate</a></li>
+                <li class="nav-item"><a href="home.html">Noticias</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn-publish">Publica en Primate</button>
+                <!-- Nuevos accesos para Login y Registro -->
+                <div class="auth-nav-links">
+                    <a href="login.html" class="btn-login">Iniciar</a>
+                    <a href="registro.html" class="btn-register">Registrarse</a>
+                </div>
+                
+                <button class="btn-publish">Publica en Zentrum</button>
+                
                 <div class="user-profile">
                     <i class="fa-solid fa-user-tie"></i>
-                    <span>johao grisales</span>
+                    <a href="dashboard.html"><span>johao grisales</span></a>
                 </div>
             </div>
         </div>
     </header>
 
     <section class="hero">
-        <h1>Primate<span> Inmobiliaria</span></h1>
+        <h1>Zentrum<span> Inmobiliaria</span></h1>
         <p>El poder de encontrar tu hogar ideal</p>
         <div class="search-container">
             <div class="search-tabs">
                 <button class="tab active">Venta</button>
                 <button class="tab">Arriendo</button>
-                <button class="tab">Proyectos Primate</button>
+                <button class="tab">Proyectos Zentrum</button>
             </div>
             <div class="search-bar">
                 <select class="search-select">
-                    <option>Propiedades Primate...</option>
+                    <option>Propiedades Zentrum...</option>
                     <option>Casas Exclusivas</option>
                     <option>Apartamentos Premium</option>
                     <option>Lotes y Fincas</option>
                 </select>
-                <input type="text" class="search-input" placeholder="Busca por ubicación o palabra clave en Primate">
+                <input type="text" class="search-input" placeholder="Busca por ubicación o palabra clave en Zentrum">
                 <button class="btn-search">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -592,29 +633,29 @@
     </section>
 
     <section class="container">
-        <h2 class="section-title">Destacados <span>Primate</span></h2>
+        <h2 class="section-title">Destacados <span>Zentrum</span></h2>
         <div class="featured-grid">
             <div class="featured-card card-1">
                 <div class="featured-content">
-                    <div class="tag-badge">Exclusivo Primate</div>
+                    <div class="tag-badge">Exclusivo Zentrum</div>
                     <h3>Lujo en Caracas - Venezuela</h3>
-                    <p>Desde $850.000.000 | Espacios de alta gama desarrollados por Primate Inmobiliaria.</p>
+                    <p>Desde $850.000.000 | Espacios de alta gama desarrollados por Zentrum Inmobiliaria.</p>
                     <button class="btn-know-more">Ver Detalles</button>
                 </div>
             </div>
             <div class="featured-card card-2">
                 <div class="featured-content">
-                    <div class="tag-badge">Lanzamiento Primate</div>
-                    <h3>Residencias Primate Horizon</h3>
-                    <p>Apartamentos con diseño vanguardista y la mejor valorización del mercado.</p>
+                    <div class="tag-badge">Lanzamiento Zentrum</div>
+                    <h3>Residencias Zentrum Horizon</h3>
+                    <p>Apartamentos con design vanguardista y la mejor valorización del mercado.</p>
                     <button class="btn-know-more">Ver Detalles</button>
                 </div>
             </div>
             <div class="featured-card card-3">
                 <div class="featured-content">
-                    <div class="tag-badge">Inversión Primate</div>
+                    <div class="tag-badge">Inversión Zentrum</div>
                     <h3>Fincas de Recreo Tucacas</h3>
-                    <p>Encuentra terrenos y casas campestres con el respaldo de Primate Inmobiliaria.</p>
+                    <p>Encuentra terrenos y casas campestres con el respaldo de Zentrum Inmobiliaria.</p>
                     <button class="btn-know-more">Ver Detalles</button>
                 </div>
             </div>
@@ -623,7 +664,7 @@
 
     <section class="listings-section">
         <div class="container">
-            <h2 class="section-title">Últimos Ingresos <span>Primate</span></h2>
+            <h2 class="section-title">Últimos Ingresos <span>Zentrum</span></h2>
             <div class="listings-slider">
                 <div class="listing-card">
                     <div class="listing-img" style="background-image: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=400&q=80');">

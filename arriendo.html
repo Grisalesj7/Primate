@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inmuebles en Arriendo en Colombia - Primate</title>
+    <title>Inmuebles en Arriendo en Venezuela - Zentrum</title>
     <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -268,7 +268,7 @@
             color: var(--primary-red);
         }
 
-        /* --- 4. TARJETAS DE INMUEBLES (ESTILO PREMIUM OSCURO) --- */
+        /* --- 4. TARJETAS DE INMUEBLES --- */
         .properties-list {
             display: flex;
             flex-direction: column;
@@ -290,7 +290,6 @@
             border-color: var(--primary-red);
         }
 
-        /* Zona Izquierda: Imagen del Inmueble */
         .card-image-wrapper {
             width: 38%;
             position: relative;
@@ -391,7 +390,6 @@
             font-weight: 600;
         }
 
-        /* Zona Derecha: Contenido e Información */
         .card-content {
             flex: 1;
             padding: 0;
@@ -476,7 +474,6 @@
             overflow: hidden;
         }
 
-        /* Acciones de Contacto Premium */
         .contact-actions {
             margin-top: auto;
             display: flex;
@@ -532,6 +529,151 @@
             border-color: var(--whatsapp-green);
         }
 
+        /* --- 5. NUEVO: MODAL DEL FORMULARIO DE REGISTRO --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: var(--main-black);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            border-radius: 8px;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            transform: translateY(-30px);
+            transition: transform 0.3s ease;
+            padding: 30px;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .modal-header h2 span {
+            color: var(--primary-red);
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-close-modal:hover {
+            color: var(--primary-red);
+        }
+
+        /* Formulario Interno */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            background: var(--card-black);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--primary-red);
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .form-submit-btn {
+            grid-column: span 2;
+            background: var(--primary-red);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .form-submit-btn:hover {
+            background: var(--dark-red);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+
         /* Responsivo */
         @media (max-width: 850px) {
             .property-card {
@@ -544,6 +686,15 @@
             .nav-menu {
                 display: none;
             }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .form-submit-btn {
+                grid-column: span 1;
+            }
         }
     </style>
 </head>
@@ -552,7 +703,7 @@
     <!-- 1. NAVBAR GENERAL -->
     <header>
         <div class="container navbar">
-            <div class="logo">Primate<span>.</span></div>
+            <div class="logo"><a href="index.html">Zentrum<span>.</span></a></div>
             <ul class="nav-menu">
                 <li><a href="proyectoviviendas.html">Proyectos de vivienda</a></li>
                 <li><a href="venta.html">Venta</a></li>
@@ -561,7 +712,8 @@
                 <li><a href="dashboard.html">Dashboard</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn-publish">Publica tu propiedad</button>
+                <!-- Botón Navbar conectado al Modal -->
+                <button class="btn-publish" id="openFormNav">Publica tu propiedad</button>
                 <div class="user-profile">
                     <i class="fa-regular fa-user"></i>
                     <span>johao grisales</span>
@@ -591,7 +743,7 @@
             <div class="title-section">
                 <div class="breadcrumb">Estás en: Primate > Arriendo</div>
                 <h1>Inmuebles en Arriendo en Venezuela</h1>
-                <div class="results-count">Mostrando <strong>1-21</strong> de más de <strong>400</strong> resultados</div>
+                <div class="results-count">Mostrando <strong>1-2</strong> de más de <strong>400</strong> resultados</div>
             </div>
             <div class="view-actions">
                 <button class="btn-view"><i class="fa-solid fa-arrow-down-short-wide"></i> Popularidad</button>
@@ -621,9 +773,8 @@
                 <div class="card-content">
                     <div class="branding-header"></div>
                     <div class="card-body-details">
-                        
                         <div class="property-price">$ 8.645.109</div>
-                        <div class="property-subtitle">Apartamento en Arriendo, Merida</div>
+                        <div class="property-subtitle">Apartamento en Arriendo, Venezuela</div>
                         
                         <div class="property-specs">
                             <span><i class="fa-solid fa-bed"></i> 1 Hab</span>
@@ -631,9 +782,9 @@
                             <span><i class="fa-solid fa-maximize"></i> 40 m²</span>
                         </div>
 
-                        <div class="property-description-title">Apartamento En Arriendo En Los Teques</div>
+                        <div class="property-description-title">Apartamento En Merida</div>
                         <div class="property-description-text">
-                            Hermoso apartamento ubicado en el corazón de Los Teques, con vista panorámica a la ciudad, cuenta con acabados modernos, cocina equipada, aire acondicionado y acceso a zonas comunes como piscina y gimnasio...
+                            Hermoso apartamento ubicado en un sector exclusivo de la ciudad, con vista panorámica, cuenta con acabados modernos, cocina equipada, aire acondicionado y acceso a excelentes zonas comunes...
                         </div>
 
                         <div class="contact-actions">
@@ -664,9 +815,8 @@
                 <div class="card-content">
                     <div class="branding-header">Arrendamos Ya</div>
                     <div class="card-body-details">
-                        
                         <div class="property-price">$ 1.800.000</div>
-                        <div class="property-subtitle">Apartamento en Los Teques, Caracas</div>
+                        <div class="property-subtitle">Apartamento en Los teque, Caracas</div>
                         
                         <div class="property-specs">
                             <span><i class="fa-solid fa-bed"></i> 2 Habs</span>
@@ -684,12 +834,107 @@
                             <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
                             <a href="#" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Whatsapp</a>
                         </div>
-                    </div>
+                    </div>  
                 </div>
             </div>
 
         </div>
     </main>
+
+    <!-- --- 6. NUEVO: ESTRUCTURA DEL FORMULARIO POP-UP --- -->
+    <div class="modal-overlay" id="modalForm">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Publica tu <span>Propiedad</span></h2>
+                <button class="btn-close-modal" id="closeForm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form action="#" method="POST" class="form-grid">
+                <div class="form-group full-width">
+                    <label for="title">Título del Anuncio</label>
+                    <input type="text" id="title" placeholder="Ej: Espectacular Apartamento con vista al Poblado" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Precio de Arriendo (COP)</label>
+                    <input type="number" id="price" placeholder="Ej: 2500000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Tipo de Inmueble</label>
+                    <select id="type" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="apartamento">Apartamento</option>
+                        <option value="casa">Casa</option>
+                        <option value="apartestudio">Apartestudio</option>
+                        <option value="local">Local Comercial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Ubicación / Barrio</label>
+                    <input type="text" id="location" placeholder="Ej: Calasanz, Medellín" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rooms">Habitaciones</label>
+                    <input type="number" id="rooms" min="1" placeholder="Ej: 3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="baths">Baños</label>
+                    <input type="number" id="baths" min="1" placeholder="Ej: 2" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="area">Área (m²)</label>
+                    <input type="number" id="area" placeholder="Ej: 75" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="image-url">URL de la Imagen de Portada</label>
+                    <input type="url" id="image-url" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Descripción Detallada</label>
+                    <textarea id="description" placeholder="Describe las características principales, comodidades y ventajas del inmueble..." required></textarea>
+                </div>
+
+                <button type="submit" class="form-submit-btn">Guardar y Publicar Inmueble</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- --- 7. NUEVO: LÓGICA INTERACTIVA EN JAVASCRIPT --- -->
+    <script>
+        const modal = document.getElementById('modalForm');
+        const openBtnNav = document.getElementById('openFormNav');
+        const closeBtn = document.getElementById('closeForm');
+
+        // Función para abrir el modal
+        const openModal = () => {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Evita el scroll de fondo
+        };
+
+        // Función para cerrar el modal
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Devuelve el scroll
+        };
+
+        // Event Listeners
+        openBtnNav.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        // Cerrar al hacer clic fuera del contenedor del formulario
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
