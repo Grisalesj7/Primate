@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmuebles en Arriendo en Colombia - Primate</title>
+    <!-- Fuentes e Iconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ESTILOS BASE Y VARIABLES (PALETA PRIMATE) --- */
+        :root {
+            --primary-red: #e63946;
+            --dark-red: #b81d24;
+            --main-black: #111111;
+            --card-black: #1a1a1a;
+            --bg-dark: #0a0a0a;
+            --border-color: #2a2a2a;
+            --text-light: #f4f4f4;
+            --text-muted: #a0a0a0;
+            --whatsapp-green: #25d366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- 1. NAVBAR SUPERIOR --- */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--main-black);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--primary-red); }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 22px;
+        }
+
+        .nav-menu a {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-publish {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-publish:hover {
+            background-color: var(--dark-red);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .user-profile i {
+            color: var(--primary-red);
+        }
+
+        /* --- 2. BARRA DE FILTROS (STICKY SUB-HEADER) --- */
+        .filters-bar {
+            background: var(--main-black);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .filters-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            outline: none;
+            background-color: var(--card-black);
+            color: #ffffff;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input::placeholder {
+            color: #555555;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-red);
+        }
+
+        .filter-select {
+            padding: 12px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            background: var(--card-black);
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .filter-select:hover {
+            border-color: var(--primary-red);
+            color: #ffffff;
+        }
+
+        .filter-select.active {
+            background-color: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+        }
+
+        /* --- 3. CONTENIDO PRINCIPAL --- */
+        .main-content {
+            padding: 40px 20px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 35px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .title-section h1 {
+            font-size: 1.6rem;
+            color: #ffffff;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .breadcrumb {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .results-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .results-count strong {
+            color: #ffffff;
+        }
+
+        .view-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-view {
+            padding: 10px 18px;
+            border: 1px solid var(--border-color);
+            background: var(--main-black);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn-view:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        /* --- 4. TARJETAS DE INMUEBLES (ESTILO PREMIUM OSCURO) --- */
+        .properties-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .property-card {
+            display: flex;
+            background: var(--main-black);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-red);
+        }
+
+        /* Zona Izquierda: Imagen del Inmueble */
+        .card-image-wrapper {
+            width: 38%;
+            position: relative;
+            min-width: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .badges-container {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 5;
+        }
+
+        .badge-status {
+            background: var(--primary-red);
+            padding: 5px 12px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .fav-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(17, 17, 17, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            z-index: 5;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .fav-button:hover {
+            color: var(--primary-red);
+            background-color: var(--main-black);
+            border-color: var(--primary-red);
+        }
+
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 12px;
+            transform: translateY(-50%);
+        }
+
+        .nav-arrow {
+            background: rgba(17, 17, 17, 0.8);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #ffffff;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .nav-arrow:hover {
+            background: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(17, 17, 17, 0.8);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Zona Derecha: Contenido e Información */
+        .card-content {
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .branding-header {
+            background: var(--card-black);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 25px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-body-details {
+            padding: 25px;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .property-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .property-specs {
+            display: flex;
+            gap: 24px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            background-color: var(--card-black);
+            padding: 10px 15px;
+            border-radius: 4px;
+            width: fit-content;
+            border: 1px solid var(--border-color);
+        }
+
+        .property-specs span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .property-specs span i {
+            color: var(--primary-red);
+        }
+
+        .property-description-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .property-description-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 25px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Acciones de Contacto Premium */
+        .contact-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-action {
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn-contact {
+            background-color: var(--primary-red);
+            color: white;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+        }
+
+        .btn-contact:hover {
+            background-color: var(--dark-red);
+        }
+
+        .btn-call {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+        }
+
+        .btn-call:hover {
+            border-color: #ffffff;
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .btn-whatsapp {
+            background-color: transparent;
+            color: var(--whatsapp-green);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+        }
+
+        .btn-whatsapp:hover {
+            background-color: rgba(37, 211, 102, 0.05);
+            border-color: var(--whatsapp-green);
+        }
+
+        /* Responsivo */
+        @media (max-width: 850px) {
+            .property-card {
+                flex-direction: column;
+            }
+            .card-image-wrapper {
+                width: 100%;
+                height: 240px;
+            }
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVBAR GENERAL -->
+    <header>
+        <div class="container navbar">
+            <div class="logo">Primate<span>.</span></div>
+            <ul class="nav-menu">
+                <li><a href="proyectoviviendas.html">Proyectos de vivienda</a></li>
+                <li><a href="venta.html">Venta</a></li>
+                <li><a href="arriendo.html">Arriendo</a></li>
+                <li><a href="home.html">Noticias</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-publish">Publica tu propiedad</button>
+                <div class="user-profile">
+                    <i class="fa-regular fa-user"></i>
+                    <span>johao grisales</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. BARRA DE FILTROS SUB-HEADER -->
+    <div class="filters-bar">
+        <div class="container filters-container">
+            <div class="search-box">
+                <input type="text" placeholder="Busca por ubicación o palabra clave">
+            </div>
+            <button class="filter-select active">Arriendo <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="filter-select">Tipo de Propiedad <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="filter-select">Precio <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="filter-select">Habs. y baños <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="filter-select"><i class="fa-solid fa-sliders"></i> Más filtros</button>
+        </div>
+    </div>
+
+    <!-- 3. CONTENIDO PRINCIPAL -->
+    <main class="container main-content">
+        
+        <div class="results-header">
+            <div class="title-section">
+                <div class="breadcrumb">Estás en: Primate > Arriendo</div>
+                <h1>Inmuebles en Arriendo en Venezuela</h1>
+                <div class="results-count">Mostrando <strong>1-21</strong> de más de <strong>400</strong> resultados</div>
+            </div>
+            <div class="view-actions">
+                <button class="btn-view"><i class="fa-solid fa-arrow-down-short-wide"></i> Popularidad</button>
+                <button class="btn-view"><i class="fa-solid fa-map"></i> Ver Mapa</button>
+            </div>
+        </div>
+
+        <!-- LISTA DE INMUEBLES -->
+        <div class="properties-list">
+
+            <!-- TARJETA 1 -->
+            <div class="property-card">
+                <div class="card-image-wrapper" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80');">
+                    <div class="badges-container">
+                        <span class="badge-status"><i class="fa-solid fa-star"></i> DESTACADO</span>
+                    </div>
+                    <div class="fav-button">
+                        <i class="fa-regular fa-heart"></i>
+                    </div>
+                    <div class="image-nav">
+                        <span class="nav-arrow"><i class="fa-solid fa-chevron-left"></i></span>
+                        <span class="nav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                    </div>
+                    <div class="image-counter">1 / 11</div>
+                </div>
+
+                <div class="card-content">
+                    <div class="branding-header"></div>
+                    <div class="card-body-details">
+                        
+                        <div class="property-price">$ 8.645.109</div>
+                        <div class="property-subtitle">Apartamento en Arriendo, Merida</div>
+                        
+                        <div class="property-specs">
+                            <span><i class="fa-solid fa-bed"></i> 1 Hab</span>
+                            <span><i class="fa-solid fa-bath"></i> 2 Baños</span>
+                            <span><i class="fa-solid fa-maximize"></i> 40 m²</span>
+                        </div>
+
+                        <div class="property-description-title">Apartamento En Arriendo En Los Teques</div>
+                        <div class="property-description-text">
+                            Hermoso apartamento ubicado en el corazón de Los Teques, con vista panorámica a la ciudad, cuenta con acabados modernos, cocina equipada, aire acondicionado y acceso a zonas comunes como piscina y gimnasio...
+                        </div>
+
+                        <div class="contact-actions">
+                            <button class="btn-action btn-contact"><i class="fa-regular fa-envelope"></i> Contactar</button>
+                            <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
+                            <a href="#" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Whatsapp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TARJETA 2 -->
+            <div class="property-card">
+                <div class="card-image-wrapper" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80');">
+                    <div class="badges-container">
+                        <span class="badge-status"><i class="fa-solid fa-star"></i> DESTACADO</span>
+                    </div>
+                    <div class="fav-button">
+                        <i class="fa-regular fa-heart"></i>
+                    </div>
+                    <div class="image-nav">
+                        <span class="nav-arrow"><i class="fa-solid fa-chevron-left"></i></span>
+                        <span class="nav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+                    </div>
+                    <div class="image-counter">1 / 9</div>
+                </div>
+
+                <div class="card-content">
+                    <div class="branding-header">Arrendamos Ya</div>
+                    <div class="card-body-details">
+                        
+                        <div class="property-price">$ 1.800.000</div>
+                        <div class="property-subtitle">Apartamento en Los Teques, Caracas</div>
+                        
+                        <div class="property-specs">
+                            <span><i class="fa-solid fa-bed"></i> 2 Habs</span>
+                            <span><i class="fa-solid fa-bath"></i> 2 Baños</span>
+                            <span><i class="fa-solid fa-maximize"></i> 65 m²</span>
+                        </div>
+
+                        <div class="property-description-title">Apartamento Con Excelente Vista Iluminado</div>
+                        <div class="property-description-text">
+                            Hermoso inmueble ubicado en sector residencial exclusivo, cuenta con balcón amoblado, parqueadero cubierto, vigilancia privada 24/7 y acceso rápido a vías principales...
+                        </div>
+
+                        <div class="contact-actions">
+                            <button class="btn-action btn-contact"><i class="fa-regular fa-envelope"></i> Contactar</button>
+                            <button class="btn-action btn-call"><i class="fa-solid fa-phone"></i> Llamar</button>
+                            <a href="#" class="btn-action btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Whatsapp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

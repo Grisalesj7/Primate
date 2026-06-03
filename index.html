@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primate Inmobiliaria - El poder de encontrar tu hogar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ESTILOS GENERALES Y VARIABLES (ROJO Y NEGRO) --- */
+        :root {
+            --primary-red: #e61e2b;
+            --hover-red: #b3121b;
+            --dark-bg: #0a0a0a;
+            --card-bg: #141414;
+            --light-gray: #f5f5f5;
+            --border-dark: #262626;
+            --text-muted: #aaaaaa;
+            --card-shadow: 0 4px 20px rgba(230, 30, 43, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            color: #ffffff;
+            background-color: var(--dark-bg);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title span {
+            color: var(--primary-red);
+        }
+
+        /* --- 1. HEADER / NAVBAR --- */
+        header {
+            border-bottom: 1px solid var(--border-dark);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary-red);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-item a {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-item a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-publish {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-publish:hover {
+            background-color: var(--hover-red);
+            transform: translateY(-2px);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-profile i {
+            color: var(--primary-red);
+        }
+
+        /* --- 2. HERO / SEARCH SECTION --- */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+            border-bottom: 2px solid var(--border-dark);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 span {
+            color: var(--primary-red);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            color: var(--text-muted);
+        }
+
+        .search-container {
+            background: rgba(20, 20, 20, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-dark);
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .search-tabs {
+            display: flex;
+            background: #000000;
+            padding: 5px;
+            border-radius: 6px;
+            width: fit-content;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .tab {
+            padding: 8px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .tab.active {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        .search-bar {
+            display: flex;
+            background: #ffffff;
+            border-radius: 6px;
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .search-select {
+            padding: 15px;
+            border: none;
+            border-right: 1px solid #dddddd;
+            background: transparent;
+            color: #333333;
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            width: 30%;
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            color: #333333;
+        }
+
+        .btn-search {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            width: 55px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+
+        .btn-search:hover {
+            background: var(--hover-red);
+        }
+
+        /* --- 3. SECCIÓN DESTACADOS --- */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .featured-card {
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-dark);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.2));
+            z-index: 1;
+        }
+
+        .card-1 { background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80') center/cover; }
+        .card-2 { background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80') center/cover; }
+        .card-3 { background: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80') center/cover; }
+
+        .featured-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .tag-badge {
+            background: var(--primary-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .featured-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .btn-know-more {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-know-more:hover {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        /* --- 4. SECCIÓN ÚLTIMOS INGRESOS --- */
+        .listings-section {
+            background-color: #0f0f0f;
+            border-top: 1px solid var(--border-dark);
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .listings-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .listing-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s;
+            border: 1px solid var(--border-dark);
+        }
+
+        .listing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+        }
+
+        .listing-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .fav-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-dark);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .fav-icon:hover {
+            color: var(--primary-red);
+            background: #ffffff;
+        }
+
+        .listing-info {
+            padding: 20px;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 5px;
+        }
+
+        .location {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .features {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-dark);
+            padding-bottom: 15px;
+        }
+
+        .features span i {
+            margin-right: 5px;
+            color: var(--primary-red);
+        }
+
+        .listing-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --- 5. FOOTER / PIE DE PÁGINA --- */
+        footer {
+            background-color: var(--dark-bg);
+            padding: 60px 0 30px 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid var(--primary-red);
+            padding-left: 8px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary-red);
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .social-links a i {
+            font-size: 1.1rem;
+            width: 20px;
+            color: var(--primary-red);
+        }
+
+        /* --- RESPONSIVO --- */
+        @media (max-width: 768px) {
+            .nav-menu, .nav-actions .user-profile {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .search-bar {
+                flex-direction: column;
+                gap: 10px;
+                background: transparent;
+                padding: 0;
+            }
+            .search-select, .search-input, .btn-search {
+                width: 100%;
+                border-radius: 6px;
+                background: white;
+            }
+            .search-select {
+                border-right: none;
+            }
+            .btn-search {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="logo">Primate<span> Inmobiliaria</span></div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="proyectoviviendas.html">Proyectos Primate</a></li>
+                <li class="nav-item"><a href="venta.html">Ventas</a></li>
+                <li class="nav-item"><a href="arriendo.html">Arriendos</a></li>
+                <li class="nav-item"><a href="dashboard.html">Dashboard</a></li>
+                <li class="nav-item"><a href="home.html">Noticias Primate</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-publish">Publica en Primate</button>
+                <div class="user-profile">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>johao grisales</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Primate<span> Inmobiliaria</span></h1>
+        <p>El poder de encontrar tu hogar ideal</p>
+        <div class="search-container">
+            <div class="search-tabs">
+                <button class="tab active">Venta</button>
+                <button class="tab">Arriendo</button>
+                <button class="tab">Proyectos Primate</button>
+            </div>
+            <div class="search-bar">
+                <select class="search-select">
+                    <option>Propiedades Primate...</option>
+                    <option>Casas Exclusivas</option>
+                    <option>Apartamentos Premium</option>
+                    <option>Lotes y Fincas</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Busca por ubicación o palabra clave en Primate">
+                <button class="btn-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <h2 class="section-title">Destacados <span>Primate</span></h2>
+        <div class="featured-grid">
+            <div class="featured-card card-1">
+                <div class="featured-content">
+                    <div class="tag-badge">Exclusivo Primate</div>
+                    <h3>Lujo en El Poblado - Medellín</h3>
+                    <p>Desde $850.000.000 | Espacios de alta gama desarrollados por Primate Inmobiliaria.</p>
+                    <button class="btn-know-more">Ver Detalles</button>
+                </div>
+            </div>
+            <div class="featured-card card-2">
+                <div class="featured-content">
+                    <div class="tag-badge">Lanzamiento Primate</div>
+                    <h3>Residencias Primate Horizon</h3>
+                    <p>Apartamentos con diseño vanguardista y la mejor valorización del mercado.</p>
+                    <button class="btn-know-more">Ver Detalles</button>
+                </div>
+            </div>
+            <div class="featured-card card-3">
+                <div class="featured-content">
+                    <div class="tag-badge">Inversión Primate</div>
+                    <h3>Fincas de Recreo Llanogrande</h3>
+                    <p>Encuentra terrenos y casas campestres con el respaldo de Primate Inmobiliaria.</p>
+                    <button class="btn-know-more">Ver Detalles</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="listings-section">
+        <div class="container">
+            <h2 class="section-title">Últimos Ingresos <span>Primate</span></h2>
+            <div class="listings-slider">
+                <div class="listing-card">
+                    <div class="listing-img" style="background-image: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=400&q=80');">
+                        <div class="fav-icon"><i class="fa-regular fa-heart"></i></div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="price">$ 3.500.000</div>
+                        <div class="location">Laureles, Medellín</div>
+                        <div class="features">
+                            <span><i class="fa-solid fa-bed"></i> 2 Hab</span>
+                            <span><i class="fa-solid fa-bath"></i> 2 Baños</span>
+                            <span><i class="fa-solid fa-maximize"></i> 78 m²</span>
+                        </div>
+                        <div class="listing-title">Apartamento Premium Primate</div>
+                    </div>
+                </div>
+                <div class="listing-card">
+                    <div class="listing-img" style="background-image: url('https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80');">
+                        <div class="fav-icon"><i class="fa-regular fa-heart"></i></div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="price">$ 5.200.000</div>
+                        <div class="location">El Poblado, Medellín</div>
+                        <div class="features">
+                            <span><i class="fa-solid fa-bed"></i> 3 Hab</span>
+                            <span><i class="fa-solid fa-bath"></i> 3 Baños</span>
+                            <span><i class="fa-solid fa-maximize"></i> 120 m²</span>
+                        </div>
+                        <div class="listing-title">Penthouse Arriendo Primate</div>
+                    </div>
+                </div>
+                <div class="listing-card">
+                    <div class="listing-img" style="background-image: url('https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=400&q=80');">
+                        <div class="fav-icon"><i class="fa-regular fa-heart"></i></div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="price">$ 1.450.000.000</div>
+                        <div class="location">Envigado, Antioquia</div>
+                        <div class="features">
+                            <span><i class="fa-solid fa-bed"></i> 4 Hab</span>
+                            <span><i class="fa-solid fa-bath"></i> 4 Baños</span>
+                            <span><i class="fa-solid fa-maximize"></i> 240 m²</span>
+                        </div>
+                        <div class="listing-title">Casa de Lujo Venta Primate</div>
+                    </div>
+                </div>
+                <div class="listing-card">
+                    <div class="listing-img" style="background-image: url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=400&q=80');">
+                        <div class="fav-icon"><i class="fa-regular fa-heart"></i></div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="price">$ 2.800.000</div>
+                        <div class="location">Calasanz, Medellín</div>
+                        <div class="features">
+                            <span><i class="fa-solid fa-bed"></i> 1 Hab</span>
+                            <span><i class="fa-solid fa-bath"></i> 1 Baño</span>
+                            <span><i class="fa-solid fa-maximize"></i> 55 m²</span>
+                        </div>
+                        <div class="listing-title">Apartaestudio Moderno Primate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-column">
+                <h4>Ventas Primate</h4>
+                <ul>
+                    <li><a href="#">Apartamentos Primate en Medellín</a></li>
+                    <li><a href="#">Casas de Lujo Primate</a></li>
+                    <li><a href="#">Proyectos Primate Venta</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Arriendos Primate</h4>
+                <ul>
+                    <li><a href="#">Apartamentos Primate en Arriendo</a></li>
+                    <li><a href="#">Locales Comerciales Primate</a></li>
+                    <li><a href="#">Casas Campestres Primate</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Proyectos Especiales</h4>
+                <ul>
+                    <li><a href="#">Primate Horizon Residencias</a></li>
+                    <li><a href="#">Primate Loft Luxury</a></li>
+                    <li><a href="#">Desarrollos Comerciales Primate</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Alianzas Primate</h4>
+                <ul>
+                    <li><a href="#">Constructoras Aliadas Primate</a></li>
+                    <li><a href="#">Inversionistas Primate</a></li>
+                    <li><a href="#">Banca Privada Primate</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Redes Primate</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-linkedin"></i> Primate LinkedIn</a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i> Primate YouTube</a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i> Primate Instagram</a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i> Primate Facebook</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Soporte Primate</h4>
+                <ul>
+                    <li><a href="#">Preguntas Frecuentes Primate</a></li>
+                    <li><a href="#">Términos de Servicio Primate</a></li>
+                    <li><a href="#">Políticas de Privacidad Primate</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primate - Buscar inmuebles en venta o arriendo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ESTILOS BASE Y VARIABLES (PALETA NEGRO Y ROJO) --- */
+        :root {
+            --primary-red: #e63946;
+            --dark-red: #b81d24;
+            --main-black: #111111;
+            --card-black: #1a1a1a;
+            --bg-dark: #0a0a0a;
+            --text-light: #f4f4f4;
+            --text-muted: #a0a0a0;
+            --border-color: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            padding-bottom: 80px; /* Espacio para el banner de cookies fijo */
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- 1. NAVBAR SUPERIOR --- */
+        header {
+            background: var(--main-black);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary-red);
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            margin-left: 40px;
+        }
+
+        .nav-menu a {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-icon {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .search-icon:hover {
+            color: var(--primary-red);
+        }
+
+        .btn-go-fincaraiz {
+            border: 1.5px solid var(--primary-red);
+            background: transparent;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .btn-go-fincaraiz:hover {
+            background: var(--primary-red);
+        }
+
+        .btn-go-fincaraiz .fr-badge {
+            background: var(--primary-red);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+        
+        .btn-go-fincaraiz:hover .fr-badge {
+            background: white;
+            color: var(--primary-red);
+        }
+
+        /* --- 2. HERO / HERO BANNER (CARRUSEL) --- */
+        .hero-section {
+            padding: 40px 0;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            background-color: var(--main-black);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel-content {
+            width: 50%;
+            padding: 0 60px;
+            z-index: 2;
+        }
+
+        .carousel-content h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+
+        .btn-search-trigger {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-search-trigger:hover {
+            background-color: var(--dark-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.5);
+        }
+
+        /* Imagen del Banner */
+        .carousel-image-bg {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 55%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            opacity: 0.85; /* Un toque más oscuro para encajar en el estilo dark */
+        }
+
+        /* Degradado interno para fundir la imagen con el fondo oscuro */
+        .carousel-image-bg::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 25%;
+            height: 100%;
+            background: linear-gradient(to right, var(--main-black), transparent);
+        }
+
+        /* Flechas de Navegación */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: color 0.2s, background 0.2s;
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .carousel-arrow:hover {
+            color: white;
+            background: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+        .arrow-left { left: 20px; }
+        .arrow-right { right: 20px; }
+
+        /* Indicadores de posición (Puntos) */
+        .carousel-dots {
+            position: absolute;
+            bottom: 25px;
+            left: 60px; /* Alineado hacia el lado del contenido de texto */
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s, width 0.2s;
+        }
+
+        .dot.active {
+            background-color: var(--primary-red);
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        /* --- 3. BANNER DE PRIVACIDAD / COOKIES --- */
+        .cookies-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #050505;
+            color: var(--text-light);
+            padding: 18px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 25px rgba(0,0,0,0.6);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .cookies-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .cookies-text {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .cookies-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .btn-cookie {
+            padding: 9px 20px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-cookie-prefs, .btn-cookie-reject {
+            background-color: var(--card-black);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-cookie-prefs:hover, .btn-cookie-reject:hover {
+            background-color: #252525;
+            border-color: #444444;
+        }
+
+        .btn-cookie-accept {
+            background-color: var(--primary-red);
+            color: #ffffff;
+        }
+
+        .btn-cookie-accept:hover {
+            background-color: var(--dark-red);
+        }
+
+        .wp-consent-logo {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 10px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .wp-consent-logo:hover {
+            color: var(--primary-red);
+        }
+
+        /* Responsivo */
+        @media (max-width: 900px) {
+            .nav-menu { display: none; }
+            .carousel-content { width: 100%; padding: 0 30px; }
+            .carousel-image-bg { display: none; }
+            .cookies-container { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .cookies-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+            .carousel-dots { left: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div style="display: flex; align-items: center;">
+                <a href="#" class="logo">Primate<span>.</span></a>
+                <ul class="nav-menu">
+                    <li><a href="#">Noticias</a></li>
+                    <li><a href="#">Ciudades</a></li>
+                    <li><a href="#">Informes</a></li>
+                    <li><a href="#">Academia</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-right-actions">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <button class="btn-go-fincaraiz">
+                    <span class="fr-badge">Pr</span> Ir a buscador
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container hero-section">
+        <div class="carousel-wrapper">
+            <div class="carousel-arrow arrow-left">
+                <i class="fa-solid fa-chevron-left"></i>
+            </div>
+
+            <div class="carousel-content">
+                <h1>Buscar inmuebles en venta o arriendo</h1>
+                <button class="btn-search-trigger">Ir al buscador</button>
+            </div>
+
+            <div class="carousel-image-bg"></div>
+
+            <div class="carousel-arrow arrow-right">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </main>
+
+    <div class="cookies-banner">
+        <div class="container cookies-container">
+            <div class="cookies-text">
+                Utilizamos cookies para mejorar tu experiencia en nuestro sitio. Al continuar navegando, aceptas nuestra política y el uso de tecnologías de seguimiento.
+            </div>
+            <div class="cookies-actions">
+                <button class="btn-cookie btn-cookie-prefs">Preferencias</button>
+                <button class="btn-cookie btn-cookie-reject">Rechazar</button>
+                <button class="btn-cookie btn-cookie-accept">Aceptar todas</button>
+                <a href="#" class="wp-consent-logo">
+                    <i class="fa-solid fa-circle-nodes"></i> WPConsent
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
