@@ -843,8 +843,13 @@
 
     <!-- --- 6. NUEVO: ESTRUCTURA DEL FORMULARIO POP-UP --- -->
     <div class="modal-overlay" id="modalForm">
+        <!-- --- Aqui lo que hacemos es que creamos el modalForm, que en este caso, este se llamo para poder ejecutar el modal que se hace con js, en este caso es el evento que se llama en la parte de abajo --- -->
         <div class="modal-container">
+            <!-- --- Modal de contenedor, en este caso lo que hace el modal del contenedor, esto sirve para que llamemos, la clase de modelo de contenedor
+             En esto se le pueden asignar estilos, por medio de esas clases. --- -->
             <div class="modal-header">
+                <!-- --- Tenemos el  modal del header, en este caso, lo que hacemos con este mismo es que con esta clase podemos llamarla por la misma, y hacerle los estilos, si quieres lo puedes hacer en el mismo codigo
+                 O sino te puede creas por ejemplo un index.css, en este caso puedes meter todos los datos   --- -->
                 <h2>Publica tu <span>Propiedad</span></h2>
                 <button class="btn-close-modal" id="closeForm"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -908,31 +913,41 @@
 
     <!-- --- 7. NUEVO: LÓGICA INTERACTIVA EN JAVASCRIPT --- -->
     <script>
+        // Lo que hace este modalForm, es que basicamente, lo que hace es que se ejecuta manera global, es decir, esto se renderiza en toda la pagina, lo que hace es que se asigna a una variable, para luego ser llamado en el evento del click, en este caso el click de publicar tu propiedad, lo que hace es que se abre el formulario, despues de eso, se le asigna el close form, para que despues de guardar, se cierre automaticamente el formulario.
         const modal = document.getElementById('modalForm');
+        // Basicamente, aca lo que hacemos es que llamamos al modal del formulario, en este caso lo que pasa es que le asignamos validaciones 
         const openBtnNav = document.getElementById('openFormNav');
+        // En este caso, este open form, lo que hace es que genera el arriba del nav, lo que pasa en esta funcion es que nos permite abrir el nav, en este caso donde dice publicar propiedad
+        // Despues de que se hace esto, pasamos al close form
         const closeBtn = document.getElementById('closeForm');
+        // Que es lo que pasa en el closeForm, el close form,, lo que hace es que despues de que se guarde el inmueble, ya se cierra por completo
 
         // Función para abrir el modal
         const openModal = () => {
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Evita el scroll de fondo
+            // Ahora bien, que es lo que pasa con el OpenModal, en este caso como la llamamos arriba, lo que hace esto es que los lista, lo que hace este const, si ya esta activo
+            document.body.style.overflow = 'hidden'; // Evita el scroll de fondo, en este caso el scroll de fondo, lo que hace es que llama lo que es el body, en este caso lo que permite es que el formulario no se evidencie dentro del mismo body
+            // Lo que hace en el body, es que el formulario, no permite que se evidencie en el mismo nav, en este caso el nav, donde dice publicar tu propiedad
         };
 
-        // Función para cerrar el modal
+        // Función para cerrar el modal, en este caso despues de darle guardar y publicar inmueble, lo que hace es que automaticamente, se cierra el modal y guarda todos los datos.
         const closeModal = () => {
             modal.classList.remove('active');
+            // En este caso el remove, lo que hace es que basicamente, remueve el formulario del body, es decir, despues de que se guarden los cambios, el formulario automaticamente se cierra y se carga en la pagina principal, en este caso en el de arriendo
             document.body.style.overflow = 'auto'; // Devuelve el scroll
         };
 
         // Event Listeners
         openBtnNav.addEventListener('click', openModal);
+        // En este caso lo que hace es que al darle a publicar tu propiedad, se crea un evento tipo click, en este caso este evento proviene y se le asigna de js (JavaScript), cuando se le da click a dicho boton, lo que hace es que se abre de una vez el formulario de publica tu propiedad
         closeBtn.addEventListener('click', closeModal);
-
+        // Tenemos tambien el evento click para cerrar el modal, en este caso lo que hacemos aqui, en esta funcion, lo que sucede es que le decimos que despues de guardar, se cierre automaticamente
         // Cerrar al hacer clic fuera del contenedor del formulario
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 closeModal();
             }
+            // En este caso el evento (e), lo que hace es que si le da click, fuera del formulario, este se deberia de cerrar  
         });
     </script>
 

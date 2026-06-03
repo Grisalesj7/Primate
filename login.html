@@ -54,7 +54,7 @@
 
         .auth-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .logo {
@@ -168,6 +168,72 @@
             transform: translateY(-2px);
         }
 
+        /* --- NUEVOS ESTILOS: INICIO DE SESIÓN SOCIAL --- */
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .separator:not(:empty)::before {
+            margin-right: .5em;
+        }
+
+        .separator:not(:empty)::after {
+            margin-left: .5em;
+        }
+
+        .social-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            background: #111111;
+            border: 1px solid var(--border-dark);
+            color: #ffffff;
+        }
+
+        .btn-social i {
+            font-size: 1.1rem;
+        }
+
+        .btn-social.google-btn:hover {
+            background: #1f1f1f;
+            border-color: #4285F4;
+            transform: translateY(-1px);
+        }
+
+        .btn-social.apple-btn:hover {
+            background: #1f1f1f;
+            border-color: #ffffff;
+            transform: translateY(-1px);
+        }
+        /* ----------------------------------------------- */
+
         .auth-footer {
             text-align: center;
             font-size: 0.9rem;
@@ -183,6 +249,19 @@
         .auth-footer a:hover {
             text-decoration: underline;
         }
+
+        .alert-error {
+            background-color: rgba(230, 30, 43, 0.15);
+            border: 1px solid var(--primary-red);
+            color: #ff4d5a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -193,26 +272,28 @@
             <p>Ingresa tu cuenta, mira los servicios que te podemos ofrecer</p>
         </div>
 
-        <form action="dashboard.html" method="POST">
+        <div id="errorBox" class="alert-error"></div>
+
+        <form id="loginForm">
             <div class="form-group">
-                <label>Correo Electrónico</label>
+                <label for="log-email">Correo Electrónico</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" class="form-control" placeholder="ejemplo@zentrum.com" required>
+                    <input type="email" id="log-email" name="login_correo" class="form-control" placeholder="ejemplo@zentrum.com" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Contraseña</label>
+                <label for="log-password">Contraseña</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" class="form-control" placeholder="Escribe tu contraseña" required>
+                    <input type="password" id="log-password" name="login_password" class="form-control" placeholder="Escribe tu contraseña" required>
                 </div>
             </div>
 
             <div class="form-actions">
                 <label class="remember-me">
-                    <input type="checkbox"> Recordarme
+                    <input type="checkbox" name="recordarme"> Recordarme
                 </label>
                 <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
             </div>
@@ -220,10 +301,61 @@
             <button type="submit" class="btn-submit">Iniciar Sesión</button>
         </form>
 
+        <div class="separator">o continuar con</div>
+
+        <div class="social-buttons-container">
+            <button type="button" id="googleLoginBtn" class="btn-social google-btn">
+                <i class="fa-brands fa-google" style="color: #ea4335;"></i> Google
+            </button>
+            <button type="button" id="appleLoginBtn" class="btn-social apple-btn">
+                <i class="fa-brands fa-apple"></i> Apple
+            </button>
+        </div>
+
         <div class="auth-footer">
             <p>¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a></p>
         </div>
     </div>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('log-email').value.trim().toLowerCase();
+            const password = document.getElementById('log-password').value;
+            const errorBox = document.getElementById('errorBox');
+
+            errorBox.style.display = 'none';
+
+            const users = JSON.parse(localStorage.getItem('zentrum_users')) || [];
+            const validUser = users.find(user => user.email === email);
+
+            if (!validUser) {
+                errorBox.textContent = "El correo electrónico no se encuentra registrado.";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (validUser.password !== password) {
+                errorBox.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            sessionStorage.setItem('active_user', JSON.stringify({ name: validUser.name, email: validUser.email }));
+            window.location.href = 'dashboard.html';
+        });
+
+        // Eventos para simular el click de los botones sociales (para cuando integres Firebase o Auth0)
+        document.getElementById('googleLoginBtn').addEventListener('click', function() {
+            console.log('Iniciando flujo con Google Auth...');
+            // Aquí irá tu lógica de SDK de Google, Firebase Auth, supabase, etc.
+        });
+
+        document.getElementById('appleLoginBtn').addEventListener('click', function() {
+            console.log('Iniciando flujo con Apple Auth...');
+            // Aquí irá tu lógica de SDK de Apple
+        });
+    </script>
 </body>
 </html>

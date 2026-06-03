@@ -114,7 +114,6 @@
             gap: 20px;
         }
 
-        /* Estilos para los nuevos enlaces de autenticación en el Navbar */
         .auth-nav-links {
             display: flex;
             align-items: center;
@@ -126,6 +125,7 @@
         .btn-login {
             color: #ffffff;
             transition: color 0.3s;
+            cursor: pointer;
         }
 
         .btn-login:hover {
@@ -484,7 +484,174 @@
             text-overflow: ellipsis;
         }
 
-        /* --- 5. FOOTER / PIE DE PÁGINA --- */
+        /* --- 5. MODAL DE AUTENTICACIÓN (LOGIN) --- */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .auth-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 30px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: var(--card-shadow);
+            transform: translateY(-30px);
+            transition: transform 0.4s ease;
+            overflow: hidden;
+        }
+
+        .auth-modal.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .btn-close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .btn-close-modal:hover {
+            color: var(--primary-red);
+        }
+
+        /* Vistas internas del modal (Transición fluida) */
+        .modal-view {
+            transition: all 0.5s ease;
+            width: 100%;
+        }
+
+        .modal-view.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        /* Formulario */
+        .modal-box h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-box h3 span {
+            color: var(--primary-red);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: #000000;
+            border: 1px solid var(--border-dark);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+        }
+
+        .error-msg {
+            color: var(--primary-red);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn-submit-auth {
+            width: 100%;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit-auth:hover {
+            background: var(--hover-red);
+        }
+
+        /* Vista de Bienvenida Animada */
+        .welcome-view {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .welcome-view i {
+            font-size: 4rem;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+            animation: scaleUp 0.5s ease-out forwards;
+        }
+
+        .welcome-view h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .welcome-view p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- 6. FOOTER --- */
         footer {
             background-color: var(--dark-bg);
             padding: 60px 0 30px 0;
@@ -592,9 +759,9 @@
                 <li class="nav-item"><a href="home.html">Noticias</a></li>
             </ul>
             <div class="nav-actions">
-                <!-- Nuevos accesos para Login y Registro -->
                 <div class="auth-nav-links">
-                    <a href="login.html" class="btn-login">Iniciar</a>
+                    <!-- id añadido para capturar el click -->
+                    <a id="openLogin" class="btn-login">Iniciar</a>
                     <a href="registro.html" class="btn-register">Registrarse</a>
                 </div>
                 
@@ -607,6 +774,40 @@
             </div>
         </div>
     </header>
+
+    <!-- --- SECCIÓN MODAL LOGIN --- -->
+    <div class="auth-modal" id="loginModal">
+        <div class="modal-box">
+            <div class="btn-close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></div>
+            
+            <!-- Vista 1: Formulario de Login -->
+            <div class="modal-view" id="loginView">
+                <h3>Iniciar <span>Sesión</span></h3>
+                <form id="loginForm" onsubmit="validateForm(event)">
+                    <div class="form-group">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="Correo Electrónico">
+                        <div class="error-msg" id="emailError">Por favor ingresa un correo válido.</div>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Contraseña">
+                        <div class="error-msg" id="passwordError">La contraseña debe tener al menos 6 caracteres.</div>
+                    </div>
+                    <button type="submit" class="btn-submit-auth">Ingresar</button>
+                </form>
+            </div>
+
+            <!-- Vista 2: Transición de Bienvenida -->
+            <div class="modal-view hidden" id="welcomeView">
+                <div class="welcome-view">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <h4>¡Bienvenido!</h4>
+                    <p>Accediendo al ecosistema de <strong>Zentrum Inmobiliaria</strong>...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="hero">
         <h1>Zentrum<span> Inmobiliaria</span></h1>
@@ -733,56 +934,138 @@
     <footer>
         <div class="container footer-grid">
             <div class="footer-column">
-                <h4>Ventas Primate</h4>
+                <h4>Ventas Zentrum</h4>
                 <ul>
-                    <li><a href="#">Apartamentos Primate en Caracas, Venezuela</a></li>
-                    <li><a href="#">Casas de Lujo Primate</a></li>
-                    <li><a href="#">Proyectos Primate Venta</a></li>
+                    <li><a href="#">Apartamentos Zentrum en Caracas, Venezuela</a></li>
+                    <li><a href="#">Casas de Lujo Zentrum</a></li>
+                    <li><a href="#">Proyectos Zentrum Venta</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>Arriendos Primate</h4>
+                <h4>Arriendos Zentrum</h4>
                 <ul>
-                    <li><a href="#">Apartamentos Primate en Arriendo</a></li>
-                    <li><a href="#">Locales Comerciales Primate</a></li>
-                    <li><a href="#">Casas Campestres Primate</a></li>
+                    <li><a href="#">Apartamentos Zentrum en Arriendo</a></li>
+                    <li><a href="#">Locales Comerciales Zentrum</a></li>
+                    <li><a href="#">Casas Campestres Zentrum</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Proyectos Especiales</h4>
                 <ul>
-                    <li><a href="#">Primate Horizon Residencias</a></li>
-                    <li><a href="#">Primate Loft Luxury</a></li>
-                    <li><a href="#">Desarrollos Comerciales Primate</a></li>
+                    <li><a href="#">Zentrum Horizon Residencias</a></li>
+                    <li><a href="#">Zentrum Loft Luxury</a></li>
+                    <li><a href="#">Desarrollos Comerciales Zentrum</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>Alianzas Primate</h4>
+                <h4>Alianzas Zentrum</h4>
                 <ul>
-                    <li><a href="#">Constructoras Aliadas Primate</a></li>
-                    <li><a href="#">Inversionistas Primate</a></li>
-                    <li><a href="#">Banca Privada Primate</a></li>
+                    <li><a href="#">Constructoras Aliadas Zentrum</a></li>
+                    <li><a href="#">Inversionistas Zentrum</a></li>
+                    <li><a href="#">Banca Privada Zentrum</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>Redes Primate</h4>
+                <h4>Redes Zentrum</h4>
                 <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-linkedin"></i> Primate LinkedIn</a>
-                    <a href="#"><i class="fa-brands fa-youtube"></i> Primate YouTube</a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i> Primate Instagram</a>
-                    <a href="#"><i class="fa-brands fa-facebook"></i> Primate Facebook</a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i> Zentrum LinkedIn</a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i> Zentrum YouTube</a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i> Zentrum Instagram</a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i> Zentrum Facebook</a>
                 </div>
             </div>
             <div class="footer-column">
-                <h4>Soporte Primate</h4>
+                <h4>Soporte Zentrum</h4>
                 <ul>
-                    <li><a href="#">Preguntas Frecuentes Primate</a></li>
-                    <li><a href="#">Términos de Servicio Primate</a></li>
-                    <li><a href="#">Políticas de Privacidad Primate</a></li>
+                    <li><a href="#">Preguntas Frecuentes Zentrum</a></li>
+                    <li><a href="#">Términos de Servicio Zentrum</a></li>
+                    <li><a href="#">Políticas de Privacidad Zentrum</a></li>
                 </ul>
             </div>
         </div>
     </footer>
 
+    <!-- --- SCRIPT DE INTERACCIÓN Y VALIDACIÓN --- -->
+    <script>
+        const modal = document.getElementById('loginModal');
+        const openLogin = document.getElementById('openLogin');
+        const closeModal = document.getElementById('closeModal');
+        
+        const loginView = document.getElementById('loginView');
+        const welcomeView = document.getElementById('welcomeView');
+
+        // Abrir Modal
+        openLogin.addEventListener('click', () => {
+            modal.classList.add('active');
+            // Resetear vistas por si se vuelve a abrir
+            loginView.classList.remove('hidden');
+            welcomeView.classList.add('hidden');
+        });
+
+        // Cerrar Modal
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Cerrar al hacer clic fuera de la caja
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Validación y Transición
+        function validateForm(event) {
+            event.preventDefault(); // Evita que recargue la página
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            
+            let isValid = true;
+
+            // Validación de Email simple
+            if (!email.includes('@') || email.length < 5) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            // Validación de Password (mínimo 6 caracteres)
+            if (password.length < 6) {
+                passwordError.style.display = 'block';
+                isValid = false;
+                // Lo que hacemos aqui es que basicamente, si la contraseña, es menor a lo que sale en el placeholder, no debe dejar entrar
+            } else {
+                passwordError.style.display = 'none';
+            }
+
+            // Si es válido, ejecutar la transición "bonita"
+            if (isValid) {
+                // Desvanecer el formulario hacia un lado
+                loginView.style.opacity = '0';
+                loginView.style.transform = 'translateX(-50px)';
+
+                setTimeout(() => {
+                    loginView.classList.add('hidden');
+                    
+                    // Mostrar la vista de bienvenida limpia
+                    welcomeView.classList.remove('hidden');
+                    welcomeView.style.opacity = '1';
+                    welcomeView.style.transform = 'translateX(0)';
+                    // Lo que hace aqui es que podemos hacer el tiempo que tardaria, el welcome view,en apariencia, es decir, lo que hace es que nos carga el modal que sale y pues ya cuando inicie nos saca la transicion
+                    
+                    // Opcional: Redireccionar o cerrar el modal después de 2.5 segundos
+                    setTimeout(() => {
+                        modal.classList.remove('active');
+                    }, 2500);
+
+                }, 400); // Sincronizado con la transición de CSS
+            }
+        }
+    </script>
 </body>
 </html>

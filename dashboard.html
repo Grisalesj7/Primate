@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publicar Inmueble - Dashboard Zentrum</title>
+    <title>Dashboard - Zentrum Inmobiliaria</title>
     <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- ESTILOS BASE Y VARIABLES (PALETA PRIMATE) --- */
+        /* --- ESTILOS BASE Y VARIABLES --- */
         :root {
             --primary-red: #e63946;
             --dark-red: #b81d24;
@@ -24,6 +24,9 @@
             --alert-bg: #1f1214;
             --alert-border: #3d1a1c;
             --alert-text: #ff858d;
+            
+            --sidebar-width: 80px;
+            --transition-speed: 0.3s;
         }
 
         * {
@@ -43,7 +46,7 @@
 
         /* --- 1. MENÚ LATERAL (SIDEBAR) --- */
         .sidebar {
-            width: 80px;
+            width: var(--sidebar-width);
             background-color: var(--main-black);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -52,6 +55,14 @@
             padding: 25px 0;
             position: relative;
             z-index: 10;
+            transition: width var(--transition-speed) ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar.expanded {
+            --sidebar-width: 240px;
+            align-items: flex-start;
+            padding: 25px 20px;
         }
 
         /* Botón colapsable superior */
@@ -68,6 +79,7 @@
             cursor: pointer;
             margin-bottom: 35px;
             transition: all 0.2s;
+            align-self: center;
         }
 
         .sidebar-toggle:hover {
@@ -75,12 +87,20 @@
             border-color: var(--primary-red);
         }
 
+        .sidebar.expanded .sidebar-toggle i {
+            transform: rotate(180deg);
+        }
+
         .nav-items {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 12px;
             width: 100%;
             align-items: center;
+        }
+
+        .sidebar.expanded .nav-items {
+            align-items: flex-start;
         }
 
         .nav-item {
@@ -94,6 +114,25 @@
             font-size: 1.25rem;
             cursor: pointer;
             transition: all 0.2s;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .sidebar.expanded .nav-item {
+            width: 100%;
+            justify-content: flex-start;
+            padding-left: 15px;
+            gap: 15px;
+        }
+
+        .nav-item span {
+            display: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .sidebar.expanded .nav-item span {
+            display: inline;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -117,11 +156,31 @@
             cursor: pointer;
             font-size: 1.1rem;
             transition: all 0.2s;
+            align-self: center;
+            text-decoration: none;
+        }
+
+        .sidebar.expanded .sidebar-user {
+            width: 100%;
+            border-radius: 8px;
+            justify-content: flex-start;
+            padding-left: 15px;
+            gap: 15px;
         }
 
         .sidebar-user:hover {
             border-color: var(--primary-red);
             color: var(--primary-red);
+        }
+
+        .sidebar-user span {
+            display: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .sidebar.expanded .sidebar-user span {
+            display: inline;
         }
 
         /* --- 2. CONTENEDOR PRINCIPAL --- */
@@ -162,13 +221,40 @@
             background-color: var(--bg-dark);
         }
 
-        /* Bloque central de formulario */
-        .form-container {
+        /* Vistas dinámicas SPA */
+        .dashboard-view {
             width: 100%;
             max-width: 820px;
+            display: none; /* Ocultas por defecto */
         }
 
-        /* Pestaña flotante superior "Continúa aquí" */
+        .dashboard-view.active-view {
+            display: block; /* Solo se muestra la activa */
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mensajes de marcador para vistas vacías */
+        .placeholder-content {
+            background-color: var(--main-black);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 50px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .placeholder-content i {
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+        }
+
+        /* --- ESTILOS DE LA VISTA COMPLETA DE PUBLICACIÓN --- */
         .continue-badge-box {
             display: flex;
             justify-content: center;
@@ -207,7 +293,6 @@
             top: 14px;
         }
 
-        /* Alerta de inmuebles prohibidos */
         .alert-prohibited {
             background-color: var(--alert-bg);
             border: 1px solid var(--alert-border);
@@ -240,7 +325,6 @@
             line-height: 1.5;
         }
 
-        /* --- SECCIÓN DE UBICACIÓN --- */
         .section-title-box {
             display: flex;
             align-items: center;
@@ -269,6 +353,7 @@
 
         .input-group {
             margin-bottom: 15px;
+            position: relative;
         }
 
         .input-group label {
@@ -311,13 +396,37 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .search-input-wrapper input::placeholder {
-            color: #555555;
-        }
-
         .search-input-wrapper input:focus {
             border-color: var(--primary-red);
             box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--main-black);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            z-index: 20;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--card-black);
+            color: var(--primary-red);
         }
 
         .attention-text {
@@ -331,27 +440,38 @@
             font-weight: 600;
         }
 
-        /* --- MAPA SIMULADO MODO OSCURO --- */
+        /* --- MAPA SIMULADO --- */
         .map-wrapper {
             position: relative;
             width: 100%;
-            height: 400px;
+            height: 420px;
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             background-color: #151515;
+            user-select: none;
         }
 
-        /* Filtros aplicados para renderizar el mapa con tonalidades Dark/Satélite */
+        .map-wrapper.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 100;
+            border-radius: 0;
+        }
+
         .mock-map {
             width: 100%;
             height: 100%;
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_world_-_land_and_oceans_12000.jpg/640px-Whole_world_-_land_and_oceans_12000.jpg');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.4;
-            filter: invert(1) hue-rotate(180deg) contrast(1.2) brightness(0.6);
+            background-size: 180% 180%;
+            background-position: 45% 35%;
+            opacity: 0.35;
+            filter: invert(1) hue-rotate(180deg) contrast(1.2) brightness(0.5);
+            transition: background-position 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .map-labels {
@@ -363,25 +483,27 @@
             pointer-events: none;
         }
 
-        .map-city {
+        .map-city, .map-country {
             position: absolute;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-muted);
             text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
-        
-        .map-country {
+        .map-city { font-size: 0.75rem; color: var(--text-muted); }
+        .map-country { font-size: 0.95rem; font-weight: 700; color: #ffffff; text-transform: uppercase; }
+
+        .map-marker-pin {
             position: absolute;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+            top: 35%;
+            left: 45%;
+            transform: translate(-50%, -100%);
+            font-size: 2.2rem;
+            color: var(--primary-red);
+            cursor: grab;
+            z-index: 15;
+            transition: transform 0.1s, left 0.4s ease, top 0.4s ease;
         }
 
-        /* Diálogo flotante del PIN */
+        .map-marker-pin:active { cursor: grabbing; transform: translate(-50%, -100%) scale(1.15); }
+
         .map-pin-prompt {
             position: absolute;
             bottom: 25px;
@@ -390,36 +512,15 @@
             background: var(--main-black);
             border-radius: 6px;
             padding: 15px 25px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
-            text-align: center;
-            z-index: 5;
             border: 1px solid var(--border-color);
             width: calc(100% - 40px);
             max-width: 340px;
+            text-align: center;
         }
 
-        .map-pin-prompt h4 {
-            font-size: 0.9rem;
-            color: #ffffff;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+        .map-pin-prompt h4 { font-size: 0.9rem; margin-bottom: 4px; }
+        .map-pin-prompt p { font-size: 0.8rem; color: var(--primary-red); text-transform: uppercase; }
 
-        .map-pin-prompt p {
-            font-size: 0.8rem;
-            color: var(--primary-red);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .map-pin-prompt p:hover {
-            color: var(--dark-red);
-        }
-
-        /* Botón de maximizar del mapa */
         .btn-fullscreen {
             position: absolute;
             top: 15px;
@@ -431,66 +532,69 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-light);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            cursor: pointer;
-            z-index: 5;
             border: 1px solid var(--border-color);
+            cursor: pointer;
             transition: all 0.2s;
         }
+        .btn-fullscreen:hover { border-color: var(--primary-red); color: var(--primary-red); }
 
-        .btn-fullscreen:hover {
-            border-color: var(--primary-red);
-            color: var(--primary-red);
-        }
-
+        /* --- BOTONES ACCIÓN --- */
+        .form-actions { display: flex; justify-content: space-between; margin-top: 35px; }
+        .btn { padding: 14px 30px; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
+        .btn-primary { background: var(--primary-red); border: 1px solid var(--primary-red); color: #ffffff; }
+        .btn-primary:hover { background: var(--dark-red); }
     </style>
 </head>
 <body>
 
-    <!-- 1. BARRA LATERAL DE NAVEGACIÓN -->
-    <aside class="sidebar">
-        <div class="sidebar-toggle">
+    <!-- 1. BARRA LATERAL DE NAVEGACIÓN (CON IDs DE ACCIÓN) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" id="sidebarToggle">
             <i class="fa-solid fa-chevron-right"></i>
         </div>
         
         <nav class="nav-items">
-            <div class="nav-item"><i class="fa-regular fa-heart"></i></div>
-            <div class="nav-item active"><i class="fa-solid fa-house-medical"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-bars"></i></div>
-            <div class="nav-item"><i class="fa-regular fa-envelope"></i></div>
-            <div class="nav-item"><i class="fa-regular fa-file-text"></i></div>
-            <div class="nav-item"><i class="fa-solid fa-chart-pie"></i></div>
+            <a href="#" class="nav-item" data-target="view-favoritos"><i class="fa-regular fa-heart"></i><span>Favoritos</span></a>
+            <a href="#" class="nav-item active" data-target="view-publicar"><i class="fa-solid fa-house-medical"></i><span>Publicar</span></a>
+            <a href="#" class="nav-item" data-target="view-ventas"><i class="fa-solid fa-file-invoice-dollar"></i><span>Ventas</span></a>
+            <a href="#" class="nav-item" data-target="view-mensajes"><i class="fa-solid fa-cart-shopping"></i><span>Mensajes</span></a>
+            <a href="#" class="nav-item" data-target="view-historial"><i class="fa-solid fa-bars"></i><span>Historial</span></a>
+            <a href="#" class="nav-item" data-target="view-notificaciones"><i class="fa-regular fa-envelope"></i><span>Notificaciones</span></a>
+            <a href="#" class="nav-item" data-target="view-reportes"><i class="fa-regular fa-file-text"></i><span>Reportes</span></a>
+            <a href="#" class="nav-item" data-target="view-metricas"><i class="fa-solid fa-chart-pie"></i><span>Métricas</span></a>
         </nav>
 
-        <div class="sidebar-user">
+        <a href="#" class="sidebar-user" data-target="view-perfil">
             <i class="fa-regular fa-user"></i>
-        </div>
+            <span>Mi Perfil</span>
+        </a>
     </aside>
 
-    <!-- 2. CONTENIDO PRINCIPAL DEL DASHBOARD -->
+    <!-- 2. CONTENEDOR PRINCIPAL DEL DASHBOARD -->
     <div class="main-wrapper">
         
-        <!-- Encabezado Fijo -->
+        <!-- Encabezado Fijo Dinámico -->
         <header class="dashboard-header">
-            <h1>Publicar inmueble</h1>
+            <h1 id="headerTitle">Publicar inmueble</h1>
         </header>
 
-        <!-- Cuerpo del Formulario -->
+        <!-- Cuerpo con Vistas Intercambiables -->
         <main class="content-body">
-            <div class="form-container">
-                
-                <!-- Pestaña superior flotante -->
-                <div class="continue-badge-box">
-                    <div class="continue-badge">
-                        Continúa aquí
-                        <i class="fa-solid fa-ellipsis-vertical info-dot"></i>
-                    </div>
-                </div>
 
-                <!-- Banner Informativo -->
+            <!-- VISTA: FAVORITOS -->
+            <div id="view-favoritos" class="dashboard-view">
+                <div class="placeholder-content">
+                    <i class="fa-regular fa-heart"></i>
+                    <h2>Tus Inmuebles Favoritos</h2>
+                    <p>Aquí aparecerán las propiedades que guardes para revisar más tarde.</p>
+                </div>
+            </div>
+
+            <!-- VISTA: PUBLICAR (VISTA PRINCIPAL ORIGINAL) -->
+            <div id="view-publicar" class="dashboard-view active-view">
+                <div class="continue-badge-box"><div class="continue-badge">Continúa aquí <i class="fa-solid fa-ellipsis-vertical info-dot"></i></div></div>
+                
                 <div class="alert-prohibited">
                     <i class="fa-solid fa-circle-info"></i>
                     <div class="alert-text">
@@ -499,64 +603,212 @@
                     </div>
                 </div>
 
-                <!-- Bloque de Título de la sección -->
-                <div class="section-title-box">
-                    <div class="icon-marker-wrapper">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-                    <h2>Ubicación de tu inmueble</h2>
-                </div>
+                <form id="propertyLocationForm" action="/save-location" method="POST">
+                    <input type="hidden" id="geoLat" name="latitude" value="10.6417">
+                    <input type="hidden" id="geoLng" name="longitude" value="-71.6119">
 
-                <!-- Input dirección -->
-                <div class="input-group">
-                    <label>Dirección / punto referencia <span>*</span></label>
-                    <div class="search-input-wrapper">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Ej: Zulia, Maracaibo">
-                    </div>
-                </div>
-
-                <!-- Nota aclaratoria -->
-                <div class="attention-text">
-                    <strong>Atención:</strong> Por seguridad, la dirección no se verá reflejada en la publicación.
-                </div>
-
-                <!-- Mapa incrustado interactivo ficticio -->
-                <div class="map-wrapper">
-                    <!-- Botón maximizar -->
-                    <div class="btn-fullscreen">
-                        <i class="fa-solid fa-expand"></i>
+                    <div class="section-title-box">
+                        <div class="icon-marker-wrapper"><i class="fa-solid fa-location-dot"></i></div>
+                        <h2>Ubicación de tu inmueble</h2>
                     </div>
 
-                    <!-- Gráfico base en modo oscuro -->
-                    <div class="mock-map"></div>
-
-                    <!-- Capas de etiquetas adaptadas al contraste oscuro -->
-                    <div class="map-labels">
-                        <span class="map-country" style="top: 30%; left: 25%;">Los teques</span>
-                        <span class="map-city" style="top: 26%; left: 23%;">Caracas</span>
-                        <span class="map-city" style="top: 35%; left: 10%;">Merida</span>
-                        <span class="map-city" style="top: 42%; left: 18%;">Trujillo</span>
-
-                        <span class="map-city" style="top: 32%; left: 45%;">Maracaibo</span>
-                        <span class="map-city" style="top: 48%; left: 55%;">San Cristóbal</span>
-
-                        <span class="map-country" style="bottom: 18%; right: 15%;">Venezuela</span>
-                        <span class="map-city" style="top: 33%; left: 63%;">Mérida</span>
-                        <span class="map-city" style="top: 33%; left: 68%;">Barinas</span>
+                    <div class="input-group">
+                        <label for="addressInput">Dirección / punto referencia <span>*</span></label>
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="addressInput" name="address" placeholder="Ej: Zulia, Maracaibo" autocomplete="off" required>
+                        </div>
+                        <div class="autocomplete-suggestions" id="suggestionsBox"></div>
                     </div>
 
-                    <!-- Diálogo emergente inferior -->
-                    <div class="map-pin-prompt">
-                        <h4>¿Te encuentras aquí?</h4>
-                        <p>Arrastra el pin para ubicar tu inmueble</p>
-                    </div>
-                </div>
+                    <div class="attention-text"><strong>Atención:</strong> Por seguridad, la dirección no se verá reflejada en la publicación.</div>
 
+                    <div class="map-wrapper" id="mapWrapper">
+                        <div class="btn-fullscreen" id="btnFullscreen"><i class="fa-solid fa-expand"></i></div>
+                        <div class="map-marker-pin" id="mapPin"><i class="fa-solid fa-location-pin"></i></div>
+                        <div class="mock-map" id="mockMap"></div>
+                        <div class="map-labels">
+                            <span class="map-country" style="top: 30%; left: 25%;">Los teques</span>
+                            <span class="map-city" style="top: 26%; left: 23%;">Caracas</span>
+                            <span class="map-city" style="top: 35%; left: 10%;">Merida</span>
+                            <span class="map-city" style="top: 32%; left: 45%;">Maracaibo</span>
+                            <span class="map-country" style="bottom: 18%; right: 15%;">Venezuela</span>
+                        </div>
+                        <div class="map-pin-prompt"><h4 id="promptTitle">¿Te encuentras aquí?</h4><p id="promptSubtitle">Arrastra el pin para ubicar tu inmueble</p></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Anterior</button>
+                        <button type="submit" class="btn btn-primary">Guardar y Continuar</button>
+                    </div>
+                </form>
             </div>
-        </main>
 
+            <!-- OTRAS VISTAS (PLACEHOLDERS) -->
+            <div id="view-ventas" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-solid fa-file-invoice-dollar"></i><h2>Panel de Ventas</h2><p>Administra tus transacciones, ofertas comerciales e ingresos.</p></div>
+            </div>
+            <div id="view-mensajes" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-solid fa-cart-shopping"></i><h2>Bandeja de Mensajes</h2><p>Revisa las ofertas de los compradores interesados en tus inmuebles.</p></div>
+            </div>
+            <div id="view-historial" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-solid fa-bars"></i><h2>Historial de Publicaciones</h2><p>Lista general de tus inmuebles activos, pausados y vendidos.</p></div>
+            </div>
+            <div id="view-notificaciones" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-regular fa-envelope"></i><h2>Notificaciones</h2><p>Aquí verás las alertas del sistema y novedades de tus publicaciones.</p></div>
+            </div>
+            <div id="view-reportes" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-regular fa-file-text"></i><h2>Contratos y Reportes</h2><p>Descarga tus documentos legales, facturas y reportes de desempeño.</p></div>
+            </div>
+            <div id="view-metricas" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-solid fa-chart-pie"></i><h2>Estadísticas de Tráfico</h2><p>Monitorea cuántas personas visualizan y guardan tus inmuebles al día.</p></div>
+            </div>
+            <div id="view-perfil" class="dashboard-view">
+                <div class="placeholder-content"><i class="fa-regular fa-user"></i><h2>Configuración de tu Cuenta</h2><p>Actualiza tus datos de contacto corporativos de Zentrum Inmobiliaria.</p></div>
+            </div>
+
+        </main>
     </div>
 
+    <!-- --- CONTROLADOR JAVASCRIPT NATIVO (SPA) --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. ROUTER DE NAVEGACIÓN FUNCIONAL PARA EL SIDEBAR (LOGOS) ---
+            const navItems = document.querySelectorAll('.nav-item, .sidebar-user');
+            // Aqui lo que hacemos es que por medio de este queryselectorAll, en este caso este actua de forma igual document, pero en este caso el nombre cambia
+            const views = document.querySelectorAll('.dashboard-view');
+            // Aqui lo que hacemos es que por medio de dashboard-view, obtenemos las validaciones del dashboard
+            const headerTitle = document.getElementById('headerTitle');
+            // En este caso aqui, tambien en el headerTitle, obtenemos el id, por medio de un document, para poder hacer validaciones
+
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // En este caso,  lo que hacemos aca es que llamamos, el evento e, en este caso el prevent default, lo que hace es que por medio de esto no se nos caiga la pagina
+                    // Remover estado activo de los otros íconos y dárselo al actual
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    // en este caso lo que hacemos es que le implementamos la clase del nav, en este caso lo que hace esto es que se puede remover el activo que hay ahi, en este momento
+
+                    // Cambiar visibilidad de las secciones
+                    const targetViewId = item.getAttribute('data-target');
+                    views.forEach(view => view.classList.remove('active-view'));
+                    
+                    const targetView = document.getElementById(targetViewId);
+                    if(targetView) {
+                        targetView.classList.add('active-view');
+                    }
+
+                    // Cambiar dinámicamente el título del Header principal
+                    const viewText = item.querySelector('span').textContent;
+                    headerTitle.textContent = viewText === "Publicar" ? "Publicar Inmueble" : viewText;
+                });
+            });
+
+            // --- 2. EXPANDIR / COLAPSAR MENU LATERAL ---
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+            // --- 3. AUTOCOMPLETADO DE DIRECCIONES (MOCK) ---
+            const addressInput = document.getElementById('addressInput');
+            const suggestionsBox = document.getElementById('suggestionsBox');
+            
+            const locationsDb = [
+                { name: "Zulia, Maracaibo, Av. Bella Vista", lat: "32%", lng: "45%", cLat: 10.654, cLng: -71.612 },
+                { name: "Zulia, Maracaibo, San Francisco", lat: "38%", lng: "44%", cLat: 10.590, cLng: -71.635 },
+                { name: "Caracas, Chacao, Altamira", lat: "26%", lng: "24%", cLat: 10.496, cLng: -66.848 },
+                { name: "Mérida, Municipio Libertador", lat: "35%", lng: "11%", cLat: 8.598, cLng: -71.144 }
+            ];
+
+            addressInput.addEventListener('input', (e) => {
+                const value = e.target.value.toLowerCase().trim();
+                suggestionsBox.innerHTML = '';
+                if (value.length < 2) { suggestionsBox.style.display = 'none'; return; }
+
+                const filtered = locationsDb.filter(loc => loc.name.toLowerCase().includes(value));
+                if (filtered.length > 0) {
+                    filtered.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = item.name;
+                        div.addEventListener('click', () => {
+                            addressInput.value = item.name;
+                            suggestionsBox.style.display = 'none';
+                            movePinTo(item.lat, item.lng, item.cLat, item.cLng);
+                        });
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else { suggestionsBox.style.display = 'none'; }
+            });
+
+            // --- 4. CONTROL INTERACTIVO DEL MAPA Y PIN ---
+            const mapWrapper = document.getElementById('mapWrapper');
+            // Lo que hacemos es que aqui en la parte de document.getElementById, obtenemos los elementos del DOM que vamos a manipular para el mapa y el pin. Luego, definimos una función updateLocation que se encarga de actualizar la posición del pin en el mapa y calcular las coordenadas geográficas basadas en la posición del pin. También tenemos una función movePinTo que mueve el pin a una ubicación específica y actualiza las coordenadas. Finalmente, agregamos event listeners para manejar los clics en el mapa, el arrastre del pin y el botón de pantalla completa.
+            const mapPin = document.getElementById('mapPin');
+            // Aqui lo que hacemos es que obtenemos el document, de lo que es el mapPin, en este caso son id, que se llaman aqui para poder hacer validaciones
+            const mockMap = document.getElementById('mockMap');
+            // En este caso aqui, obtenemos del mockMap, que es el mapa del fondo, en este caso lo que pasa aqui, es que podemos editar llamando el id del mockMap, en este caso lo de este mockMap, se ejecuta por medio de script, que en este caso es js
+            const geoLat = document.getElementById('geoLat');
+            // geolat, en este caso hacemos lo mismo, obtenemos el document, que con este podemos hacer validaciones tambien, en este caso los id's, lo que hace es que se le meten validaciones por medio de js
+            const geoLng = document.getElementById('geoLng');
+            // geolng, en este caso, en este hacemos lo mismo, lo llamamos, y podemos hacerle validaciones por medio de este document, por medio de js (JavaScript)
+            const promptTitle = document.getElementById('promptTitle');
+            // En este caso,  lo mismo hacemos para este, obtenemos el id, por medio del document, podemos hacerle validaciones, y llamarlo obviamente, que es lo bueno de todo esto, es que es codigo reutilizable
+            const promptSubtitle = document.getElementById('promptSubtitle');
+            // Aqui hacemos lo mismo, llamamos el id, y lo ejecutamos por medio de js (JavaScript)
+            let isDragging = false;
+
+            function updateLocation(pctX, pctY) {
+                if(pctX < 0) pctX = 0; if(pctX > 100) pctX = 100;
+                if(pctY < 0) pctY = 0; if(pctY > 100) pctY = 100;
+
+                mapPin.style.left = `${pctX}%`;
+                mapPin.style.top = `${pctY}%`;
+                mockMap.style.backgroundPosition = `${45 + (pctX - 45) * 0.2}% ${35 + (pctY - 35) * 0.2}%`;
+
+                const calculatedLat = (12.5 - (pctY * 0.08)).toFixed(4);
+                const calculatedLng = (-73.0 + (pctX * 0.07)).toFixed(4);
+                geoLat.value = calculatedLat;
+                geoLng.value = calculatedLng;
+
+                promptTitle.textContent = "¡Ubicación fijada con éxito!";
+                promptSubtitle.textContent = `Lat: ${calculatedLat} | Lng: ${calculatedLng}`;
+            }
+
+            function movePinTo(pctX, pctY, realLat, realLng) {
+                mapPin.style.left = pctX; mapPin.style.top = pctY;
+                geoLat.value = realLat; geoLng.value = realLng;
+                promptTitle.textContent = "Ubicación cargada";
+                promptSubtitle.textContent = `Lat: ${realLat} | Lng: ${realLng}`;
+            }
+
+            mapWrapper.addEventListener('click', (e) => {
+                if (e.target.closest('#btnFullscreen') || isDragging) return;
+                const rect = mapWrapper.getBoundingClientRect();
+                updateLocation(((e.clientX - rect.left) / rect.width) * 100, ((e.clientY - rect.top) / rect.height) * 100);
+            });
+
+            const startDrag = () => { isDragging = true; };
+            const endDrag = () => { setTimeout(() => isDragging = false, 50); };
+            mapPin.addEventListener('mousedown', startDrag);
+            window.addEventListener('mouseup', endDrag);
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = mapWrapper.getBoundingClientRect();
+                updateLocation(((e.clientX - rect.left) / rect.width) * 100, ((e.clientY - rect.top) / rect.height) * 100);
+            });
+
+            // --- 5. FULLSCREEN MAP ---
+            const btnFullscreen = document.getElementById('btnFullscreen');
+            btnFullscreen.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mapWrapper.classList.toggle('fullscreen');
+                btnFullscreen.querySelector('i').className = mapWrapper.classList.contains('fullscreen') ? "fa-solid fa-compress" : "fa-solid fa-expand";
+            });
+        });
+    </script>
 </body>
 </html>

@@ -604,7 +604,7 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DEL FORMULARIO DINÁMICO (AHORA EN CAJA COLAPSABLE EXTRAÍDA DEL MAIN PARA MEJOR FLUJO) -->
+    <!-- SECCIÓN DEL FORMULARIO DINÁMICO -->
     <div class="container form-wrapper" id="formWrapper">
         <div class="form-section">
             <h2>Publicar nuevo inmueble en Primate</h2>
@@ -625,10 +625,13 @@
                     <label>Ubicación (Ej: Apartamento en Medellín)</label>
                     <input type="text" id="formLocation" placeholder="Apartamento en..." required>
                 </div>
+                
+                <!-- CAMBIO EN EL INPUT DE IMAGEN: Ahora acepta archivos locales -->
                 <div class="form-group">
-                    <label>URL de la Imagen</label>
-                    <input type="url" id="formImageUrl" placeholder="https://images.unsplash.com/..." required>
+                    <label>Subir Imagen del Inmueble</label>
+                    <input type="file" id="formImageFile" accept="image/*" required>
                 </div>
+
                 <div class="form-group">
                     <label>Habitaciones</label>
                     <input type="number" id="formBeds" placeholder="Ej: 3" required>
@@ -660,7 +663,6 @@
 
     <!-- 3. CONTENIDO PRINCIPAL -->
     <main class="container main-content">
-        
         <div class="results-header">
             <div class="title-section">
                 <div class="breadcrumb">Estás en: Primate > Venta</div>
@@ -675,7 +677,7 @@
 
         <!-- LISTA DE INMUEBLES -->
         <div class="properties-list" id="propertiesContainer">
-            <!-- Las tarjetas quemadas por defecto y las guardadas en LocalStorage se inyectarán dinámicamente aquí -->
+            <!-- Inyección dinámica -->
         </div>
     </main>
 
@@ -779,7 +781,7 @@
             container.innerHTML = "";
             const savedProps = getStoredProperties();
             
-            // Renderizar primero los guardados por el usuario (más nuevos arriba)
+            // Renderizar primero los guardados por el usuario
             savedProps.forEach(prop => {
                 container.insertAdjacentHTML('beforeend', createCardHTML(prop));
             });
@@ -792,34 +794,53 @@
             updateCounter();
         }
 
-        // --- ESCUCHA DEL SUBMIT DEL FORMULARIO ---
+        // --- ESCUCHA DEL SUBMIT DEL FORMULARIO CON VALIDACIÓN DE IMAGEN LOCAL ---
         document.getElementById('addPropertyForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Capturar datos del objeto
-            const newProperty = {
-                branding: document.getElementById('formBranding').value,
-                price: document.getElementById('formPrice').value,
-                locationStr: document.getElementById('formLocation').value,
-                imageUrl: document.getElementById('formImageUrl').value,
-                beds: document.getElementById('formBeds').value,
-                baths: document.getElementById('formBaths').value,
-                area: document.getElementById('formArea').value,
-                tag: document.getElementById('formTag').value,
-                description: document.getElementById('formDescription').value
+            const fileInput = document.getElementById('formImageFile');
+            const file = fileInput.files[0];
+
+            // Validación: Asegurar que se haya seleccionado un archivo
+            if (!file) {
+                alert("Por favor, selecciona una imagen para el inmueble.");
+                return;
+            }
+
+            // FileReader lee el archivo binario y lo convierte en formato Base64 persistente
+            const reader = new FileReader();
+            
+            reader.onloadend = function() {
+                const base64Image = reader.result;
+
+                // Capturar datos del objeto incluyendo la imagen procesada
+                const newProperty = {
+                    branding: document.getElementById('formBranding').value,
+                    price: document.getElementById('formPrice').value,
+                    locationStr: document.getElementById('formLocation').value,
+                    imageUrl: base64Image, // Aquí se guarda la imagen local convertida
+                    beds: document.getElementById('formBeds').value,
+                    baths: document.getElementById('formBaths').value,
+                    area: document.getElementById('formArea').value,
+                    tag: document.getElementById('formTag').value,
+                    description: document.getElementById('formDescription').value
+                };
+
+                // Guardar en LocalStorage
+                const currentList = getStoredProperties();
+                currentList.unshift(newProperty);
+                localStorage.setItem('primate_sales', JSON.stringify(currentList));
+
+                // Volver a renderizar
+                renderAllProperties();
+
+                // Limpiar y ocultar formulario
+                document.getElementById('addPropertyForm').reset();
+                toggleFormBtn.click(); 
             };
 
-            // Guardar en la lista existente de LocalStorage
-            const currentList = getStoredProperties();
-            currentList.unshift(newProperty); // Inserta el nuevo al principio del storage
-            localStorage.setItem('primate_sales', JSON.stringify(currentList));
-
-            // Volver a renderizar la lista completa
-            renderAllProperties();
-
-            // Limpiar y ocultar formulario de nuevo
-            document.getElementById('addPropertyForm').reset();
-            toggleFormBtn.click(); 
+            // Ejecuta la lectura del archivo
+            reader.readAsDataURL(file);
         });
 
         // Carga inicial al abrir la página

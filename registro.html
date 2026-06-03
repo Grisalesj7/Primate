@@ -163,6 +163,72 @@
             transform: translateY(-2px);
         }
 
+        /* --- NUEVOS ESTILOS: REGISTRO SOCIAL --- */
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .separator:not(:empty)::before {
+            margin-right: .5em;
+        }
+
+        .separator:not(:empty)::after {
+            margin-left: .5em;
+        }
+
+        .social-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            background: #111111;
+            border: 1px solid var(--border-dark);
+            color: #ffffff;
+        }
+
+        .btn-social i {
+            font-size: 1.1rem;
+        }
+
+        .btn-social.google-btn:hover {
+            background: #1f1f1f;
+            border-color: #4285F4;
+            transform: translateY(-1px);
+        }
+
+        .btn-social.apple-btn:hover {
+            background: #1f1f1f;
+            border-color: #ffffff;
+            transform: translateY(-1px);
+        }
+        /* ----------------------------------------------- */
+
         .auth-footer {
             text-align: center;
             font-size: 0.9rem;
@@ -178,6 +244,29 @@
         .auth-footer a:hover {
             text-decoration: underline;
         }
+
+        /* Mensajes dinámicos de error o éxito */
+        .alert-message {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .alert-error {
+            background-color: rgba(230, 30, 43, 0.15);
+            border: 1px solid var(--primary-red);
+            color: #ff4d5a;
+        }
+        
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.15);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+        }
     </style>
 </head>
 <body>
@@ -188,51 +277,125 @@
             <p>Crea una cuenta y descubre el poder de encontrar tu hogar</p>
         </div>
 
-        <form action="login.html" method="POST">
+        <!-- Contenedor de alertas -->
+        <div id="alertBox" class="alert-message alert-error"></div>
+
+        <form id="registerForm">
             <div class="form-group">
-                <label>Nombre Completo</label>
+                <label for="reg-name">Nombre Completo</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" class="form-control" placeholder="Tu nombre y apellido" required>
+                    <input type="text" id="reg-name" name="nombre" class="form-control" placeholder="Tu nombre y apellido" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Correo Electrónico</label>
+                <label for="reg-email">Correo Electrónico</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" class="form-control" placeholder="ejemplo@primate.com" required>
+                    <input type="email" id="reg-email" name="correo" class="form-control" placeholder="ejemplo@zentrum.com" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Contraseña</label>
+                <label for="reg-password">Contraseña</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" class="form-control" placeholder="Mínimo 8 caracteres" required>
+                    <input type="password" id="reg-password" name="password" class="form-control" placeholder="Mínimo 8 caracteres" minlength="8" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Confirmar Contraseña</label>
+                <label for="reg-confirm-password">Confirmar Contraseña</label>
                 <div class="input-icon-wrapper">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <input type="password" class="form-control" placeholder="Repite tu contraseña" required>
+                    <input type="password" id="reg-confirm-password" name="confirm_password" class="form-control" placeholder="Repite tu contraseña" required>
                 </div>
             </div>
 
             <label class="terms-condition">
-                <input type="checkbox" required>
-                <span>Acepto los <a href="#">Términos de Servicio</a> y las <a href="#">Políticas de Privacidad</a> de Primate Inmobiliaria.</span>
+                <input type="checkbox" name="terminos" required>
+                <span>Acepto los <a href="#">Términos de Servicio</a> y las <a href="#">Políticas de Privacidad</a> de Zentrum Inmobiliaria.</span>
             </label>
 
             <button type="submit" class="btn-submit">Crear Cuenta</button>
         </form>
+
+        <!-- SEPARADOR VISUAL -->
+        <div class="separator">o registrarse con</div>
+
+        <!-- BOTONES SOCIALES DE REGISTRO -->
+        <div class="social-buttons-container">
+            <button type="button" id="googleRegisterBtn" class="btn-social google-btn">
+                <i class="fa-brands fa-google" style="color: #ea4335;"></i> Google
+            </button>
+            <button type="button" id="appleRegisterBtn" class="btn-social apple-btn">
+                <i class="fa-brands fa-apple"></i> Apple
+            </button>
+        </div>
 
         <div class="auth-footer">
             <p>¿Ya tienes una cuenta? <a href="login.html">Inicia Sesión</a></p>
         </div>
     </div>
 
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que la página se recargue
+
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            const alertBox = document.getElementById('alertBox');
+
+            // Ocultar alertas previas
+            alertBox.style.display = 'none';
+
+            // 1. Validar que las contraseñas coincidan
+            if (password !== confirmPassword) {
+                alertBox.className = "alert-message alert-error";
+                alertBox.textContent = "Las contraseñas no coinciden.";
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            // 2. Obtener usuarios ya existentes o inicializar lista vacía
+            let users = JSON.parse(localStorage.getItem('zentrum_users')) || [];
+
+            // 3. Validar si el correo ya está registrado
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alertBox.className = "alert-message alert-error";
+                alertBox.textContent = "Este correo electrónico ya está registrado.";
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            // 4. Guardar el nuevo usuario
+            users.push({ name: name, email: email, password: password });
+            localStorage.setItem('zentrum_users', JSON.stringify(users));
+
+            // 5. Mostrar éxito y redirigir
+            alertBox.className = "alert-message alert-success";
+            alertBox.textContent = "¡Registro exitoso! Redirigiendo al inicio de sesión...";
+            alertBox.style.display = 'block';
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        });
+
+        // Eventos para controlar los flujos de registro externo (OAuth / SDKs futuros)
+        document.getElementById('googleRegisterBtn').addEventListener('click', function() {
+            console.log('Iniciando registro rápido con cuenta de Google...');
+            // Implementación de backend / Firebase aquí
+        });
+
+        document.getElementById('appleRegisterBtn').addEventListener('click', function() {
+            console.log('Iniciando registro rápido con cuenta de Apple...');
+            // Implementación de backend / SDK Apple aquí
+        });
+    </script>
 </body>
 </html>
